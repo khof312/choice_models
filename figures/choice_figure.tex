@@ -1,0 +1,39 @@
+% \usepackage[usenames,dvipsnames]{pstricks}
+% \usepackage{epsfig}
+% \usepackage{pst-grad} % For gradients
+% \usepackage{pst-plot} % For axes
+% \usepackage[space]{grffile} % For spaces in paths
+% \usepackage{etoolbox} % For spaces in paths
+% \makeatletter % For spaces in paths
+% \patchcmd\Gread@eps{\@inputcheck#1 }{\@inputcheck"#1"\relax}{}{}
+% \makeatother
+% % User Packages:
+% 
+% 
+\psscalebox{1.0 1.0} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(0,-1.805)(6.535,1.805)
+\definecolor{colour0}{rgb}{0.8,0.8,1.0}
+\definecolor{colour1}{rgb}{0.8,1.0,0.8}
+\psframe[linecolor=colour0, linewidth=0.04, fillstyle=solid,fillcolor=colour0, dimen=outer](6.475,-0.205)(1.675,-1.005)
+\psframe[linecolor=colour1, linewidth=0.04, fillstyle=solid,fillcolor=colour1, dimen=outer](4.875,0.595)(0.075,-0.205)
+\psline[linecolor=black, linewidth=0.04](6.475,0.595)(6.475,0.995)(6.475,0.195)
+\psline[linecolor=black, linewidth=0.04](0.075,0.595)(6.475,0.595)(4.875,0.595)
+\psline[linecolor=black, linewidth=0.04](0.075,0.995)(0.075,0.195)(0.075,0.195)
+\psline[linecolor=black, linewidth=0.04](1.675,0.995)(1.675,0.995)(1.675,0.595)
+\psline[linecolor=black, linewidth=0.04](4.875,0.995)(4.875,0.995)(4.875,0.595)
+\rput[b](4.875,1.395){$\frac{3}{4}$}
+\rput[b](1.675,1.395){$\frac{1}{4}$}
+\rput[b](0.075,1.395){0}
+\rput[b](6.475,1.395){1}
+\rput[bl](3.675,-0.605){y $\succ$ z}
+\rput[bl](0.475,-0.605){z $\succ$ y}
+\rput[bl](2.075,0.195){x $\succ$ y}
+\rput[bl](5.275,0.195){y $\succ$ x}
+\psline[linecolor=black, linewidth=0.04](3.275,0.995)(3.275,0.995)(3.275,0.595)
+\psline[linecolor=black, linewidth=0.04, linestyle=dotted, dotsep=0.10583334cm](1.675,0.595)(1.675,-0.605)(1.675,-1.805)
+\psline[linecolor=black, linewidth=0.04, linestyle=dotted, dotsep=0.10583334cm](4.875,0.595)(4.875,0.595)(4.875,-1.805)
+\rput[bl](2.475,-1.805){$\Rightarrow$ x $\succ$ z}
+\end{pspicture}
+}
+
