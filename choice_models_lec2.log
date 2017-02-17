@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.27)  17 FEB 2017 11:49
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.27)  17 FEB 2017 13:40
 entering extended mode
-**choice_models_notes
-(C:\Users\khoffman\Dropbox\GitHub\choice_models\choice_models_notes.tex
+**choice_models_lec2
+(C:\Users\khoffman\Dropbox\GitHub\choice_models\choice_models_lec2.tex
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -517,7 +517,7 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 \c@definition=\count156
 \c@corollary=\count157
 
-(C:\Users\khoffman\Dropbox\GitHub\choice_models\choice_models_notes.aux)
+(C:\Users\khoffman\Dropbox\GitHub\choice_models\choice_models_lec2.aux)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 52.
 LaTeX Font Info:    ... okay on input line 52.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 52.
@@ -631,32 +631,32 @@ LaTeX Font Info:    Try loading font information for U+dsrom on input line 188.
 ("C:\Program Files (x86)\MikTex\tex\latex\doublestroke\udsrom.fd"
 File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
 ) [4]
-(C:\Users\khoffman\Dropbox\GitHub\choice_models\choice_models_notes.aux) ) 
+(C:\Users\khoffman\Dropbox\GitHub\choice_models\choice_models_lec2.aux) ) 
 Here is how much of TeX's memory you used:
  13077 strings out of 493921
- 224709 string characters out of 3146471
+ 224699 string characters out of 3146471
  347019 words of memory out of 3000000
  16152 multiletter control sequences out of 15000+200000
  39037 words of font info for 44 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 61i,12n,96p,856b,265s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/P
-rogram Files (x86)/MikTex/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Program Files (x
-86)/MikTex/fonts/enc/dvips/lm/lm-mathex.enc}{C:/Program Files (x86)/MikTex/font
-s/enc/dvips/lm/lm-rm.enc}{C:/Program Files (x86)/MikTex/fonts/enc/dvips/lm/lm-m
-athsy.enc}<C:/Program Files (x86)/MikTex/fonts/type1/public/doublestroke/dsrom1
-0.pfb><C:/Program Files (x86)/MikTex/fonts/type1/public/lm/lmbx10.pfb><C:/Progr
-am Files (x86)/MikTex/fonts/type1/public/lm/lmex10.pfb><C:/Program Files (x86)/
-MikTex/fonts/type1/public/lm/lmmi10.pfb><C:/Program Files (x86)/MikTex/fonts/ty
-pe1/public/lm/lmmi6.pfb><C:/Program Files (x86)/MikTex/fonts/type1/public/lm/lm
-mi8.pfb><C:/Program Files (x86)/MikTex/fonts/type1/public/lm/lmr10.pfb><C:/Prog
-ram Files (x86)/MikTex/fonts/type1/public/lm/lmr12.pfb><C:/Program Files (x86)/
-MikTex/fonts/type1/public/lm/lmr8.pfb><C:/Program Files (x86)/MikTex/fonts/type
-1/public/lm/lmri10.pfb><C:/Program Files (x86)/MikTex/fonts/type1/public/lm/lms
-y10.pfb><C:/Program Files (x86)/MikTex/fonts/type1/public/lm/lmsy8.pfb><C:/Prog
-ram Files (x86)/MikTex/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Progr
-am Files (x86)/MikTex/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on choice_models_notes.pdf (4 pages, 222926 bytes).
+ 61i,12n,96p,855b,265s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Pr
+ogram Files (x86)/MikTex/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Program Files (x8
+6)/MikTex/fonts/enc/dvips/lm/lm-mathex.enc}{C:/Program Files (x86)/MikTex/fonts
+/enc/dvips/lm/lm-rm.enc}{C:/Program Files (x86)/MikTex/fonts/enc/dvips/lm/lm-ma
+thsy.enc}<C:/Program Files (x86)/MikTex/fonts/type1/public/doublestroke/dsrom10
+.pfb><C:/Program Files (x86)/MikTex/fonts/type1/public/lm/lmbx10.pfb><C:/Progra
+m Files (x86)/MikTex/fonts/type1/public/lm/lmex10.pfb><C:/Program Files (x86)/M
+ikTex/fonts/type1/public/lm/lmmi10.pfb><C:/Program Files (x86)/MikTex/fonts/typ
+e1/public/lm/lmmi6.pfb><C:/Program Files (x86)/MikTex/fonts/type1/public/lm/lmm
+i8.pfb><C:/Program Files (x86)/MikTex/fonts/type1/public/lm/lmr10.pfb><C:/Progr
+am Files (x86)/MikTex/fonts/type1/public/lm/lmr12.pfb><C:/Program Files (x86)/M
+ikTex/fonts/type1/public/lm/lmr8.pfb><C:/Program Files (x86)/MikTex/fonts/type1
+/public/lm/lmri10.pfb><C:/Program Files (x86)/MikTex/fonts/type1/public/lm/lmsy
+10.pfb><C:/Program Files (x86)/MikTex/fonts/type1/public/lm/lmsy8.pfb><C:/Progr
+am Files (x86)/MikTex/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Progra
+m Files (x86)/MikTex/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on choice_models_lec2.pdf (4 pages, 222701 bytes).
 PDF statistics:
  76 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
