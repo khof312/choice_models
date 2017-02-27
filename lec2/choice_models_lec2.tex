@@ -11,6 +11,7 @@
 \patchcmd\Gread@eps{\@inputcheck#1 }{\@inputcheck"#1"\relax}{}{}
 \makeatother
 
+\usepackage{dsfont}
 \usepackage{xcolor}
 \usepackage{dsfont}
 \setlength{\oddsidemargin}{.25in}
@@ -122,7 +123,7 @@ We assume that $\mathbb{P}(\cdot|\cdot)$ satisfies the usual probability rules:
 
 Remark: Deterministic choice rules are a special case of stochastic choice rules as defined here. 
 
-{\color{gray} To capture a deterministic univalent rational choice rule, it is sufficient to have one preference order (a.k.a. preference list, rank list, permutation). To capture a stochastic choice rule, the order is not sufficient.}
+{\color{gray} To capture a deterministic univalent rational choice rule, it is sufficient to have one preference order (a.k.a. preference list, rank list, permutation). To capture a stochastic choice rule, an order is not sufficient.}
 
 \begin{definition}
 A stochastic choice rule $\mathbb{P}(\cdot | \cdot)$ is \underline{stochastically rational} if there exists a probability measure $\pi$ on $\S_n$ such that:
@@ -172,7 +173,7 @@ This is unsolvable. These probabilities imply that $\mathbb{P}(x \text{ is chose
 
 ~
 
-\centerline{\includegraphics[width=3in]{figures/choice_figure.jpg}}
+\centerline{\includegraphics[width=3in]{../figures/choice_figure.jpg}}
 
 ~
 
@@ -184,40 +185,125 @@ This is unsolvable. These probabilities imply that $\mathbb{P}(x \text{ is chose
  {\color{gray} So, under what conditions is a rule stochastically rational? Such conditions exist, but they are hard to verify.}
 
 \begin{definition}
-\underline{Axiom of Revealed Stochastic Preference (ARSP).} A stochastic choice rule $\mathbb{P}(\cdot|\cdot)$ defined over $\N$ satisfies ARSP if, for every finite collection of tuples $(x_1, \B_1), (x_2, \B_2), \ldots, $ $(x_n, \B_n)$ such that $x_i \in \B_i, ~\forall~ i$, we have that:
+\underline{Axiom of Revealed Stochastic Preference (ARSP).} A stochastic choice rule $\mathbb{P}(\cdot|\cdot)$ defined over $\N$ satisfies ARSP if, for every finite collection of tuples $(x_1, \B_1), (x_2, \B_2), \ldots, $ $(x_m, \B_m)$ such that $x_i \in \B_i$ and $\B_i \subseteq \N, ~\forall~ i$, we have that:
 $$\sum^m_{i=1} k_i ~\mathbb{P}(x_i | \B_i) ~~\leq~~ \max_{\succ \in \S_n} ~ \sum^m_{i=1} k_i ~\mathds{1}[\succ, x_i, \B_i]$$
 for any collection of nonnegative integers $k_i, i=1,\ldots, m$ and where 
 $$\mathds{1}[\succ, x, \B] = \begin{cases}1 & \text{if }x \in C(\B) \\ 0 & \text{otherwise} \end{cases}$$
 \end{definition}
 
-% \psscalebox{1.0 1.0} % Change this value to rescale the drawing.
+~
 
-% \begin{pspicture}(0,-1.805)(6.535,1.805)
-% \definecolor{colour0}{rgb}{0.8,0.8,1.0}
-% \definecolor{colour1}{rgb}{0.8,1.0,0.8}
-% \psframe[linecolor=colour0, linewidth=0.04, fillstyle=solid,fillcolor=colour0, dimen=outer](6.475,-0.205)(1.675,-1.005)
-% \psframe[linecolor=colour1, linewidth=0.04, fillstyle=solid,fillcolor=colour1, dimen=outer](4.875,0.595)(0.075,-0.205)
-% \psline[linecolor=black, linewidth=0.04](6.475,0.595)(6.475,0.995)(6.475,0.195)
-% \psline[linecolor=black, linewidth=0.04](0.075,0.595)(6.475,0.595)(4.875,0.595)
-% \psline[linecolor=black, linewidth=0.04](0.075,0.995)(0.075,0.195)(0.075,0.195)
-% \psline[linecolor=black, linewidth=0.04](1.675,0.995)(1.675,0.995)(1.675,0.595)
-% \psline[linecolor=black, linewidth=0.04](4.875,0.995)(4.875,0.995)(4.875,0.595)
-% \rput[b](4.875,1.395){$\frac{3}{4}$}
-% \rput[b](1.675,1.395){$\frac{1}{4}$}
-% \rput[b](0.075,1.395){0}
-% \rput[b](6.475,1.395){1}
-% \rput[bl](3.675,-0.605){y $\succ$ z}
-% \rput[bl](0.475,-0.605){z $\succ$ y}
-% \rput[bl](2.075,0.195){x $\succ$ y}
-% \rput[bl](5.275,0.195){y $\succ$ x}
-% \psline[linecolor=black, linewidth=0.04](3.275,0.995)(3.275,0.995)(3.275,0.595)
-% \psline[linecolor=black, linewidth=0.04, linestyle=dotted, dotsep=0.10583334cm](1.675,0.595)(1.675,-0.605)(1.675,-1.805)
-% \psline[linecolor=black, linewidth=0.04, linestyle=dotted, dotsep=0.10583334cm](4.875,0.595)(4.875,0.595)(4.875,-1.805)
-% \rput[bl](2.475,-1.805){$\Rightarrow$ x $\succ$ z}
-% \end{pspicture}
-
-
-\begin{theorem}
-A stochastic choice rule $\mathbb{P}(\cdot | \cdot)$ is stochastically rationalizable iff it satisfies ARSP.
+\begin{theorem} [McFadden and Richter '90] A stochastic choice rule $\mathbb{P}(\cdot | \cdot)$ is stochastically rationalizable iff it satisfies ARSP.
 \end{theorem}
+
+\begin{proof}
+
+\underline{1. Stochastically rational $\implies$ ARSP}. 
+Idea: average $\leq$ max. 
+
+Because $\mathbb{P}(\cdot | \cdot)$ is stochastically rational, there exists a probability mass function 
+$ \pi: \S_n \rightarrow [0,1]$ such that 
+$$\mathbb{P}(x|\B) = \sum_{\succ \in \S_n} \pi(\succ)~\mathds{1}[\succ, x, \B] = \sum_{\substack{\succ \in \S_n~:~ x\succ y, \\    \forall~ y \in \B, ~ x\neq y}} \pi(\succ),~~~\forall~x, \B~~~~~~~~~~~~~~~~(*)$$
+% That is, we take the value of 1 when $x$ is the most preferred item in set $\B$. 
+Now, for any collection of nonnegative integers $k_i$, $1 \leq i \leq m$, we must have:
+\begin{eqnarray*}
+LHS = \sum^m_{i=1} k_i ~\mathbb{P}(x_i | \B_i) 
+&=& \sum^m_{i=1}k_i \sum_{\succ \in \S_n} \pi(\succ)~\mathds{1}[\succ, x_i, \B_i] ~~~~~~~~~\text{by $(*)$}\\
+&=& \sum_{\succ \in \S_n} \pi(\succ) \sum^m_{i=1}k_i ~\mathds{1}[\succ, x_i, \B_i]\\
+&=& \sum_{\succ \in \S_n} \pi(\succ) M(\succ) \\
+&=& \mathbb{E}_\pi [M(\succ)] \\
+&\leq& \max_{\succ \in \S_n} M(\succ)  = RHS
+\end{eqnarray*}
+where $M(\succ) = \sum^m_{i=1}k_i ~\mathds{1}[\succ, x_i, \B_i]$. \\
+
+~
+
+\underline{2. ARSP $\implies$ stochastic rationality}. We prove the contrapositive, that is, $\neg$ stochastically rational $\implies~ \neg$ ARSP. 
+
+We need to show that in the absence of stochastic rationality, there is no PMF $\pi: \S_n \rightarrow [0,1]$ s.t. $\mathbb{P}(x|\B) = \sum_{\succ \in \S_n} \pi(\succ)~\mathds{1}[\succ, x, \B]$. We need to show the existence of at least one set of $k_i$ such that $\sum^m_{i=1} k_i ~\mathbb{P}(x_i|\B_i) > \max_{\succ \in \S_n} \sum^m_{k=1} k_i ~\mathds{1}[\succ, x_i, \B_i]$. 
+
+
+Let:
+\[ \begin{array}{ccc} A_{m\times n!}= 
+	\begin{bmatrix} 
+		\ddots & \vdots &   \\
+		\ldots & \mathds{1}{[\succ, x_i, \B_i]} & \ldots \\
+		 & \vdots & \ddots 
+	\end{bmatrix},  
+	&
+\vec{\pi}_{n! \times 1} = 
+	\begin{bmatrix} 
+		\vdots \\ 
+		\pi(\succ) \\ 
+		\vdots 
+	\end{bmatrix}, 
+	&
+\vec{p}_{m \times 1 } = \begin{bmatrix}
+		\vdots \\
+		\mathbb{P}(x_i | \B_i) \\
+		\vdots \\
+	\end{bmatrix}
+\end{array}\]
+where the columns of $A$ represent different preference lists $\succ$ and the rows contain binary indicators of whether or not a given $x_i$ is chosen from those preference lists. The entries of $\pi$ represent the probability of picking a given preference list. Then, we have:
+
+$$~~~~~~~~~~~~~~~A \vec{\pi} = \vec{p}~~~~~~~~~~~(**)$$
+where $
+A \in \{0,1\}^{m \times n!}, 
+~~\vec{\pi} \in \{0,1\}^{n! \times 1},$ and $\vec{p} \in \{0,1\}^m$, 
+subject to $\sum_{\succ \in \S_n} \pi(\succ)=1$ and $\pi(\succ) \geq 0, ~~\forall~\succ$. 
+
+Both $A$ and $\vec{p}$ are known to us, so if stochastically rational, this system has a feasible solution. But, because $\mathbb{P}(\cdot | \cdot)$ is not rational, the system $(**)$ is infeasible.
+
+We rewrite the above system as:
+$$\tilde{A} \vec{\pi} = \tilde{p}$$
+where $$\tilde{A} = \begin{bmatrix}A \\ \hline 1 \ldots \end{bmatrix}, 
+~~~~~~~\tilde{p} = \begin{bmatrix}p \\  \hline 1  \end{bmatrix},~~~~~~~\vec{\pi}\geq 0$$
+Since the system is infeasible, we invoke Farkas' Lemma. There exists $\vec{z} \in \mathbb{R}^{m+1}$ such that $\vec{z}~^\top \tilde{A} \leq 0$ and $\vec{z}~^\top \tilde{p}>0$. That is,
+$$ 
+\begin{bmatrix}
+z_1 & z_2 & \ldots & z_m & z_0
+\end{bmatrix}
+\begin{bmatrix}
+\ddots & \vdots & \\
+\cdots & \mathds{1}[\succ, x_i, \B_i] & \cdots \\
+& \vdots & \ddots \\
+\hline
+1  & \cdots ~~1~~ \cdots & 1
+\end{bmatrix} 
+\leq 0$$
+
+and 
+$$ 
+\begin{bmatrix}
+z_1 & z_2 & \ldots & z_m & z_0
+\end{bmatrix}
+\begin{bmatrix}
+\vdots \\
+\mathbb{P}(x_i|\B_i) \\
+\vdots \\
+\hline
+1
+\end{bmatrix} 
+> 0$$
+
+
+We can rewrite the above as: 
+$$\sum^m_{i=1} z_i ~\mathds{1} [\succ, x_i, \B_i] + z_0 \leq 0, ~~~\forall~\succ \in \S_n$$
+and 
+$$\sum^m_{i=1} z_i \mathbb{P}(x_i | \B_i) + z_0 > 0 $$
+So far, we've shown that:
+\begin{eqnarray*}
+\sum^m_{i=1} z_i ~\mathbb{P}(x_i | \B_i) + z_0 &>& \sum^m_{i=1} z_i ~\mathds{1}[\succ, x_i, \B_i] + z_0,~~\forall~\succ~ \in S_n \\
+LHS &>& \max_{\succ \in \S_n} \sum^m_{i=1} z_i ~\mathds{1} [\succ, x_i, \B_i]
+\end{eqnarray*}
+So, we've shown that there exists a $\vec{z}$ that violates the ARSP condition. We still need to show that the $k_i$ are nonnegative. Sketch of the remaining proof:
+\begin{itemize}
+	\item We go from the existence of real $z$'s to rational $q$ to integers. Because the above inequality is strict, $\exists~\varepsilon_i>0$, for $1 \leq i \leq m$, such that:
+	$$\sum^m_{i=1}(z_i+\varepsilon_i) ~\mathbb{P}(x_i | \B_i) > \max_{\succ \in \S_n} \sum^m_{i=1} (z_i + \varepsilon_i) ~\mathds{1}[\succ, x_i, \B_i]$$
+	\item To go from integers to nonnegative integers, we split into negative and positive integers. We exploit the fact that everything is normalized to 1. A note will be posted to complete the proof.
+\end{itemize}
+\begin{eqnarray*}\end{eqnarray*}
+
+\end{proof}
+
 \end{document}
