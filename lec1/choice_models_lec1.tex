@@ -1,0 +1,184 @@
+\documentclass[11pt]{article}
+\setlength{\oddsidemargin}{.25in}
+\setlength{\evensidemargin}{.25in} \setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.4in} \setlength{\textheight}{8.5in}
+\def\argmax{\mathop{\rm arg\,max}}
+
+\usepackage{xspace,epsfig,amsmath,amssymb,lmodern}
+\usepackage{booktabs}
+\usepackage[all]{xy}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+
+\newenvironment{sketch}{\noindent\emph{Proof Sketch:}}{$\quad \Box$}
+\newenvironment{proof}{\noindent\emph{Proof:}}{$\quad \Box$}
+\newcommand{\handout}[5]{
+   \renewcommand{\thepage}{\arabic{page}}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{
+    \hbox to 5.78in { {\bf Choice Models in Operations}  \hfill #2
+}
+       \vspace{4mm}
+       \hbox to 5.78in { {\Large \hfill #5  \hfill} }
+       \vspace{2mm}
+       \hbox to 5.78in { {\it #3 \hfill #4} }
+      }
+   }
+   \end{center}
+   \vspace*{4mm}
+}
+
+\begin{document}
+
+\handout{}{}{Instructor: Srikanth Jagabathula}
+{Scribe:  Sherry Wang } {Lecture
+  1. :  Preference Theory}
+\section{Notation}
+\begin{table}[htbp]
+  \centering
+  \caption{Notation}
+    \begin{tabular}{ccc}
+    \toprule
+       Calliqraphic symbols   & Sets & $\mathcal{X,N,M}$ \\
+    Sans seril font   & Random variables & $\mathsf{U}, \mathsf{X}, \mathsf{Y}$ \\
+    Capital letter & Matrices & $A,B$\\
+    Greek and small letters & cardinality, indexing & $i,j,m,n$\\
+    \bottomrule
+\end{tabular}
+\end{table}
+\section{Preference Theory}
+$\mathcal{N}$: universe of $n$ items\\
+$2^{\mathcal{N}}$: power set of $\mathcal{N}$, the set of collection of all subsets of $\mathcal{N}$.\\
+\subsection{Choice rule}
+\begin{definition}
+  A function $C$: from $2^{\mathcal{N}}$ to $2^{\mathcal{N}}$, s.t. $C(\mathcal{B})\subseteq \mathcal{B}, \forall \mathcal{B} \in 2^{\mathcal{N}}$.\\
+  If $x\in C(\mathcal{B})$, then we say that ``$x$ is chosen from $\mathcal{B}$".\\
+  If $y \in \mathcal{B}$, then we say that ``$y$ could have been chosen from $\mathcal{B}$"
+\end{definition}
+In classical economics, $\mathcal{B}$ is often called ``budget set". In operation and marketing, $\mathcal{B}$ is an ``offer set'' or ``choice set''.\\
+Remarks:
+\begin{enumerate}
+  \item $C(\mathcal{B})$ doesn't have to be a singleton.
+  \item $C(\mathcal{B})$  may be empty.
+  \item If $C(\mathcal{B})\neq \phi, \forall \mathcal{B} \in 2^{\mathcal{N}}$, then $C(.)$ is ``decisive''.
+  \item $C(.)$ is a singleton $\forall \mathcal{B}$, then $C(.)$ is ``univalent''.
+\end{enumerate}
+
+\subsection{Preference rule}
+\begin{definition}
+We define a weak preference $\succeq$ of a customer over the set $\mathcal{N}$ as follows:
+$x \succeq y \iff x$ is at least as good as $y$.
+``Making elements of $\mathcal{N}$ comparable to each other''
+\end{definition}
+\begin{definition}
+We say that $x$ is strictly preferred to $y$ if $x \succeq y $ but $y \nsucceq x$.
+\end{definition}
+
+We make 2 assumptions:
+\begin{enumerate}
+\item Completeness: A weak preference $\succeq$ is complete iff $\forall x, y \in \mathcal{N}$ we have either $x \succeq y $ or $y \succeq x$, or both.
+\item Transitivity: A preference relation is transitive if whenever $x \succeq y $ and $y \succeq z $ then $x \succeq z, \forall x,y,z \in \mathcal{N}$
+\end{enumerate}
+Representation: we can represent a rational preference relation as a graph with the items as nodes and a directed edge from $x$ to $y$ iff $x \succeq y $.
+\begin{displaymath}
+ \xymatrix{
+1 \ar[r] &2\ar[d]\\
+3  \ar[u] &4\ar[l]}
+\end{displaymath}
+In this graph, you can cycle among all the products.
+Kahneman and Tversky
+Eg: Participants want to buy \$125 stereo and \$15 calculator.\\
+Q1: You learn that there is a \$5 discount on calculator at another store. Will you go to the other store?\\
+Q2: You learn that there is a \$5 discount on stereo at another store. Will you go to the other store?\\
+Q3: Both are out of stock. You are offered a \$5 discount to go to the other store. Do you care which item is discounted?\\
+Most people say YES to Q1, NO to Q2, INDIFFERENT to Q3.\\
+$x$: travel to the other store for discount on calculator.\\
+$y$: travel to the other store for discount on stereo.\\
+$z$: stay at the store.\\
+Q1: YES implies $x \succ z$\\
+Q2: NO implies $z \succ y$\\
+By rationality, $x \succ y$\\
+Q3: INDIFFERENCE implies $x \sim y$\\
+
+\begin{definition}
+Every preference relation $\succeq$ that is rational induces a choice rule: $C(\mathcal{B};\succeq)=\{x\in \mathcal{B}|x\succeq y, \forall y \in \mathcal{B}\}$
+\end{definition}
+Remarks:
+\begin{enumerate}
+\item $C(\mathcal{B};\succeq)$ may contain more than one element.
+\item $C(\mathcal{B};\succeq)$ may be empty, only if the sets are infinite.\\
+e.g. $\succeq$ is $\geq$, let $\mathcal{N}=R, \mathcal{B}=[0,1), then \{x \in \mathcal{B}:x\succeq y, \forall y \in \mathcal{B} \}=\phi$\\
+If $\mathcal{N}$ is finite, then $C(\mathcal{B};\succeq)$ is always nonempty.
+\end{enumerate}
+\begin{definition}
+HARP:Houthaker's Axiom of Revealed Preference\\
+A choice function satisfies HARP if whenever $x,y \in \mathcal{A}\cap \mathcal{B}$ and $x\in C(\mathcal{A}), y \in C(\mathcal{B})$, then we must have $x\in C(\mathcal{B}), y \in C(\mathcal{A})$
+\end{definition}
+
+%\begin{proposition}
+%  Suppose there exists a complete and transitive relation $\succeq$ on $\mathcal{N}$, s.t. $C(.)=C(.;\succeq)$ iff $C(.)$ satisfies HARP.
+%\end{proposition}
+
+\begin{theorem}
+  C(.) is non empty and satisfies HARP iff $\exists$ a complete and transitive $\succeq$ s.t. $C(\mathcal{B})=C(\mathcal{B};\succeq), \forall \mathcal{B}$
+\end{theorem}
+\begin{proof}
+  $\Longleftarrow$    \\
+  We first prove that $C(.)$ is not empty. \\
+  We use induction on the size of $\mathcal{B}$ to prove that $C(\mathcal{B})$ is not empty.\\
+  Base case: Suppose $\mathcal{B}={x}$, then $C(\mathcal{B})=x$, which is not empty.\\
+  Inductive hypothesis: Suppose HARP is true for any $\mathcal{B}$  of size at most $n$.\\
+  Now we show the result for sets of size $n+1$.\\
+  For any set $\mathcal{A}$ of size $n+1$, we claim that $C(\mathcal{A})=C(\mathcal{A};\succeq)$ \\
+  $\mathcal{A}=\{x\}\cup \mathcal{B}$ for some $x \notin \mathcal{B}$ and $\mathcal{B} s.t. |\mathcal{B}|=n$\\
+  By inductive hypothesis, we know that $C(\mathcal{B})\neq \phi$\\
+  Suppose $y\in C(\mathcal{B})$, because $\succeq$ is complete, one of the following must be true.
+  \begin{enumerate}
+    \item $x \succeq y$: By transitivity, we must have that $x \succeq z, \forall z \in \mathcal{B}$, so $x\in C(\mathcal{A})$.
+    \item $y \succeq x$: Then $y \in C(\mathcal{A})$ by definition.
+  \end{enumerate}
+  It thus follows by induction that $C(\mathcal{B})=C(\mathcal{B};\succeq)\neq \phi$.\\
+  Then we agree that $C(.)$ must satisfy HARP.\\
+  $\Longrightarrow$ \\
+  If $C(.)$ is non-empty and HARP, we need to show $\exists$ a complete and transitive $\succeq$ s.t. $C(\mathcal{B})=C(\mathcal{B};\succeq), \forall \mathcal{B}$.\\
+  First, we construct a preference relation $\succeq$ as follows:\\
+  $x \succeq y$ whenever $\exists$ a subset $\mathcal{B}$ s.t. $x, y \in \mathcal{B}$ and $x \in C(\mathcal{B})$.\\
+  First we need to show $\succeq$ is complete.\\
+  Consider $\mathcal{B}=\{x,y\}$. Since $C(.)$ is non-empty, one of the following must be true:
+  \begin{itemize}
+  \item $x \in C(\{x,y\}) \Rightarrow x\succeq y$
+  \item $y \in C(\{x,y\}) \Rightarrow y\succeq x$
+   \item $x, y \in C(\{x,y\}) \Rightarrow y\succeq x , x\succeq y$
+  \end{itemize}
+  In all cases, we have $y\succeq x$ or $ x\succeq y$, so $\succeq$ is complete.\\
+  Then we need to show $\succeq$ is transitive: we need to show that if $x\succeq y$ and $y\succeq z$, then $x\succeq z$.\\
+  By definition of $\succeq$, we know that $\exists \mathcal{A}_1$ and $\mathcal{A}_2$ s.t. \\
+  $x, y \in \mathcal{A}_1 $ and $x \in C(\mathcal{A}_1)$ \\
+    $y, z \in \mathcal{A}_2 $ and $y \in C(\mathcal{A}_2)$ \\
+    Let's consider $\mathcal{B}=\{x, y, z\}$, there are three cases.
+    \begin{enumerate}
+    \item $x \in C(\mathcal{B})$, then by definition, $x \succeq z$
+    \item $y \in C(\mathcal{B})$. Now note that $x, y \in \mathcal{A}_1\cap \mathcal{B}, x\in C(\mathcal{A}_1), y \in C(\mathcal{B})$, by HARP, $x \in C(\mathcal{B}) \Longrightarrow x \succeq z$
+    \item $z \in C(\mathcal{B})$ Note that $y, z \in \mathcal{A}_2 \cap \mathcal{B}$ and $y \in C(\mathcal{A}_2), z \in C(\mathcal{B})$. By HARP, $y \in C(\mathcal{B})$. And then it reduced to 2.
+    \end{enumerate}
+Then we need to show $C(.)=C(.;\succeq)$
+\begin{enumerate}
+\item $C(\mathcal{B}) \subseteq C(\mathcal{B}; \succeq), \forall \mathcal{B} $\\
+    $x \in C(\mathcal{B}) $, by definition of $\succeq$, $x\succeq y, \forall y \in \mathcal{B}$. By definition of $C(.;\succeq), x\in C(\mathcal{B};\succeq)  $
+\item $C(\mathcal{B}) \supseteq C(\mathcal{B}; \succeq), \forall \mathcal{B} $\\
+    $x \in C(\mathcal{B};\succeq)$ Consider an element $y \in C(\mathcal{B})$. Such a $y$ exists because $C(\mathcal{B})\neq \phi$\\
+    Because $x \in C(\mathcal{B};\succeq) \Longrightarrow x \succeq y$ .\\
+    Since $x \succeq y$, $\exists$ a set $\mathcal{A}$ s.t. $x \in C(\mathcal{A})$ and $x, y \in \mathcal{A}$\\
+    Because $y \in C(\mathcal{B})$, we have that $x, y \in \mathcal{A} \cap \mathcal{B}, x \in C(\mathcal{A}), y \in C(\mathcal{B})$, by HARP, $x \in C(\mathcal{B})$.
+    \end{enumerate}
+    It thus follows that  $C(\mathcal{B}) = C(\mathcal{B}; \succeq), \forall \mathcal{B} $
+\end{proof}
+
+
+\end{document}
