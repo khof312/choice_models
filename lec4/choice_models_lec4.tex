@@ -1,0 +1,199 @@
+\documentclass[11pt]{article}
+\setlength{\oddsidemargin}{.25in}
+\setlength{\evensidemargin}{.25in} \setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.4in} \setlength{\textheight}{8.5in}
+\def\argmax{\mathop{\rm arg\,max}}
+
+\usepackage{xspace,epsfig,amsmath,amssymb,lmodern}
+\usepackage{booktabs}
+\usepackage[all]{xy}
+\usepackage{bbm,mathtools,tikz,nth,pifont,mathrsfs,tcolorbox,float}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\p}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\newenvironment{example}[2][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\DeclareMathOperator*{\argmin}{argmin}% no space, limits underneath in displays
+%\DeclareMathOperator{\argmin}{argmin} % no space, limits on side in displays
+\newenvironment{sketch}{\noindent\emph{Proof Sketch:}}{$\quad \Box$}
+\newenvironment{proof}{\noindent\emph{Proof:}}{$\quad \Box$}
+\newcommand{\handout}[5]{
+   \renewcommand{\thepage}{\arabic{page}}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{
+    \hbox to 5.78in { {\bf Choice Models in Operations}  \hfill #2
+}
+       \vspace{4mm}
+       \hbox to 5.78in { {\Large \hfill #5  \hfill} }
+       \vspace{2mm}
+       \hbox to 5.78in { {\it #3 \hfill #4} }
+      }
+   }
+   \end{center}
+   \vspace*{4mm}
+}
+
+\begin{document}
+
+\handout{}{}{Instructor: Srikanth Jagabathula}
+{Scribe:  Haotian Song} {Lecture
+  4 :  Random Utility Maximization (RUM) Models}
+A quick review: from last lecture, we have
+\begin{align*}
+&\p(\cdot|\cdot)\mbox{ (stochastic choice function)}\\
+&\uparrow(\mbox{ARSP})\\
+&\mbox{Rational (consistent with a distribution over preference lists)}\\
+&\updownarrow\mbox{(finite product space)}\\
+&\mbox{Random Utility Representation}\ (\p(1\succ2\succ\cdots\succ n)=\p_F(U_1\geq U_2\geq\cdots\geq U_n))
+\end{align*}
+where we assume the distribution is continuous.
+\\ \\
+Now we focus on specific models. Specifying a choice model that is rational is equivalent to specifying a distribution over preference lists.
+\begin{tcolorbox}
+\begin{example}[Example]1
+To specify the choice function for choosing between coffee and tea, we need to specify the probability that the underlying preference list is
+$$\sigma_1:\mbox{coffee}\succ\mbox{tea}\quad\mbox{and}\quad\sigma_2:\mbox{tea}\succ\mbox{coffee}.$$
+Suppose we specify that $\p(\sigma_1)=60\%$ and $\p(\sigma_1)=40\%$. This implies that in each choice instance the customer samples $\sigma_1$ with probability $60\%$ or $\sigma_2$ with probability $40\%$, and that 
+$$\p\{\mbox{coffee}|(\mbox{coffee,tea})\}=60\%=\p(\sigma_1).$$
+We can also equivalently specify the model in terms of utilities. For example, suppose the customer samples the utility vector
+$$\begin{bmatrix*}[l]
+U_{\mbox{coffee}}\\U_{\mbox{tea}}
+\end{bmatrix*}=\begin{cases}\begin{bmatrix*}[l]
+40\\20
+\end{bmatrix*}&\mbox{ with probability }60\%\\\begin{bmatrix*}[l]
+10\\30
+\end{bmatrix*}&\mbox{ with probability }40\%\end{cases}$$
+which yields the same stochastic choice function.
+\end{example}
+\end{tcolorbox}
+\quad\\
+Because a distribution over preference lists can be equivalently specified through a distribution over utilities, historically two approaches have been taken. In the \textbf{first} approach, distributions over rankings were directly specified.
+\begin{tcolorbox}
+\begin{example}[Example]
+2\textbf{[Distance-Based Models]} A popular way to specify a distribution over rankings is to use a $distance$ (can be pseudo-distance) function over preference lists. In particular, suppose $d(\sigma_1,\sigma_2)$ specifies ``\textit{how far}'' the two rankings are. For instance, the {\bf Kendall-Tau Distance} measures the number of pairwise disagreements between two rankings:
+$$d(\sigma_1,\sigma_2)=\sum_{1\leq i<j\leq n}\mathbbm{1}[(\sigma_1(i)-\sigma_1(j))(\sigma_2(i)-\sigma_2(j))<0],$$
+where $\sigma(i)$ is the preference rank of item $i$ under ranking $\sigma$.
+\\ \\
+In Example 1, letting $i$=coffee and $j$=tea, with lower rank prefered, we have
+\begin{align*}
+\sigma_1(i)-\sigma_1(j)&=1-2=-1\\
+\sigma_2(i)-\sigma_2(j)&=2-1=1\\
+d(\sigma_1,\sigma_2)&=\mathbbm{1}[(\sigma_1(i)-\sigma_1(j))(\sigma_2(i)-\sigma_2(j))<0]=1
+\end{align*}
+which implies there is pairwise disagreement between $\sigma_1$ and $\sigma_2$ on the preference of $i$ and $j$.
+\\ \\
+Also note the maximum distance between two rankings of $n$ items is $\displaystyle\binom{n}{2}$, such as
+\begin{align*}
+&\sigma_1:1\succ2\succ\cdots\succ n\\
+\text{and}\quad&\sigma_2:n\succ n-1\succ\cdots\succ1
+\end{align*}
+\end{example}
+\end{tcolorbox}
+\quad\\
+Given a distance function, we consider the following distribution $\p(\sigma)\propto e^{-\theta d(\sigma,\omega)}$ where $\theta>0$ is the concentration parameter and $\omega\in\mathscr{S}_n$ is the modal ranking on the centroid ranking. This distribution is unimodal and has a mode at $\omega$.
+\begin{figure}[H]
+\includegraphics[width=6cm]{1}
+\centering
+\end{figure}
+\noindent When the distance function is Kendall-Tau, this model is called the \emph{Mallows Model} which is very popular in machine learning and statistics but not in operations and marketing. The concentration parameter $\theta=0$ yields a uniform distribution and large values of $\theta$ result in concentrated or ``$peaked$'' distributions. The modal ranking $\omega$ makes the model hard to use in practice.
+\begin{tcolorbox}
+\begin{example}[Example]
+3 If we are given $m$ samples $\sigma_1,\sigma_2,\cdots,\sigma_m$, then it can be shown that
+$$\omega\in\argmin_{\omega\in\mathscr{S}_n}\sum_{i=1}^md(\sigma_i,\omega)$$
+when $\omega$ is estimated using maximum likelihood.
+\end{example}
+\end{tcolorbox}
+\quad\\
+We write $\p(\sigma)=\displaystyle\frac{1}{z(\theta)}e^{-\theta d(\sigma,\omega)}$ where $z(\theta)=\displaystyle\sum_{\sigma\in\mathscr{S}_n}e^{-\theta d(\sigma,\omega)}$ is the normalized constant and is also called the partition function. By exploiting the symmetry of the distance function, it can be shown that $z(\theta)$ does not depend on $\omega$. In particular,
+$$z(\theta)=\prod_{i=1}^n\frac{1-e^{-i\theta}}{1-e^{-\theta}}.$$
+[Reference: a monograph by {\em Persi Diaconis}]
+\\ \\
+We now take the \textbf{second} approach and specify the choice model by specifying a distribution over the utility vectors. This approach has been very popular first in psychology, transportation, economics and then in marketing and operations. This approach yields the \textbf{Random Utility Maximization (RUM)} class of models. Here we specify the utility of each of items and then a joint distribution over all the utilities. In particular, we say
+$$U_i=\mbox{utility for product }i=V_i+\varepsilon_i$$
+where we split the utility of item $i$ into a deterministic component $V_i$ and a random component $\varepsilon_i$ which is also called the ``$error$'' term. Note that the decomposition is \textbf{not} unique. 
+\begin{tcolorbox}
+Why people call them the error terms? Historically, RUM models were first used by $Thurstone$ in 1920s. He was doing some sound experiments and in Thurstonian models all the errors are independent. In 1970s, the MNL models (see below) became popular and the error terms referred to something that the modeller could not observe.
+\end{tcolorbox}
+\noindent Once the deterministic components are specified, we need to specify a joint distribution over the error terms. We start with the binary case with $n=2$:
+$$U_1=V_1+\varepsilon_1\quad\mbox{and}\quad U_2=V_2+\varepsilon_2.$$
+To compute choice probabilities, we could compute the probabilities of preference lists induced by the utility specification and then compute choice probabilities, \textbf{or} we could directly compute the choice probabilities. These two computations yield the same result when $n=2$. So,
+\begin{align*}
+\p(1\succ2)&=\p(1|\{1,2\})=\p(U_1\geq U_2)\\
+&=\p(V_1+\varepsilon_1\geq V_2+\varepsilon_2)\\
+&=\p(\varepsilon\leq V_1-V_2)=F_\varepsilon(V_1-V_2)
+\end{align*}
+where $\varepsilon=\varepsilon_2-\varepsilon_1$ and $F_\varepsilon$ is its CDF.
+\newpage
+\begin{itemize}
+\item If $\varepsilon\overset{D}\sim\mathcal{N}(0,\sigma^2)$, then we get the {\bf Binary Probit Model}.
+\item If $\varepsilon\overset{D}\sim Logistic(0,\mu)$, then we get the {\bf Binary Logit Model}.
+\end{itemize}
+The normal distribution does not have an explicit formula for its CDF, while the logistic distribution does:
+$$F_\varepsilon(x)=\frac{1}{1+e^{-\mu(x-\eta)}},\quad\text{for }\varepsilon\overset{D}\sim Logistic(\eta,\mu)$$
+where $\eta$ is the location parameter and $\mu>0$ is the scale parameter. In particular, substituting into the expression above, we obtain
+$$\p(1\succ2)=\frac{1}{1+e^{-\mu(V_1-V_2)}}=\frac{e^{\mu V_1}}{e^{\mu V_1}+e^{\mu V_2}}.$$
+For the binary case, we need not know the distributions of $\varepsilon_1$ and $\varepsilon_2$; we only need the distribution of $\varepsilon$. When there are $n$ items, the binary probit and logit models generalize to the {\bf Multinormial Probit Model (MNP)} and {\bf Multinormial Logit Model (MNL)} respectively. In particular,
+\begin{itemize}
+\item an MNP model specifies that $(\varepsilon_1,\varepsilon_2,\cdots,\varepsilon_n)\overset{D}\sim\mathcal{N}(0,\sum_{n\times n})$;
+\item an MNL model assumes that $(\varepsilon_i)_{i=1}^n$ are i.i.d. \textbf{Gumbel} distributed.
+\end{itemize}
+The Gumbel distribution is Type I extreme value distribution, the other two types being \textbf{Fr$\acute{\mbox{e}}$chet} (Type II) and \textbf{Weibull} (Type III).
+\begin{tcolorbox}
+These distributions arise as the limit distribution of appropriately randomized maximum of a sequence of i.i.d. random variables. In particular, suppose $X_1,X_2,\cdots,X_n$ are i.i.d. and $M_n=\displaystyle\max_{1\leq i\leq n}X_i$. If 
+$$\p\bigg(\frac{M_n-b_n}{a_n}\leq x\bigg)\to G(x)\quad\mbox{as }n\to\infty$$
+for some sequences of constants $\{a_n\}$ and $\{b_n\}$, then $G(\cdot)$ must be one of the three extreme value distributions. In short,
+\begin{itemize}
+\item The \textbf{Central Limit Theorem (CLT):} taking the limit of the average of a sequence of random variables as $n\to\infty$, we obtain the normal distribution.
+\item The \textbf{Extreme Value Theory (EV):} taking the limit of the maximum of a sequnce of random variables as $n\to\infty$, we obtain one of the three types.
+\end{itemize}
+The EV theory was developed in 1950s.
+\end{tcolorbox}
+\noindent For $\varepsilon\overset{D}\sim Gumbel(\eta,\mu)$, its CDF is $$F_\varepsilon(x)=\exp(e^{-\mu(x-\eta)})$$ where $\eta$ is the location parameter and $\mu>0$ is the scale parameter.
+\begin{tcolorbox}
+\textbf{Properties} of the Gumbel distribution 
+\begin{enumerate}
+\item The mode is $\eta$.
+\item The mean is $\eta+\displaystyle\frac{\gamma}{\mu}$, where $\gamma$ is the Euler's constant
+$$\gamma=\lim_{n\to\infty}\bigg(\sum_{k=1}^n\frac{1}{k}-\ln n\bigg)\approx0.57721.$$
+\item The variance is $\displaystyle\frac{\pi^2}{6\mu^2}$.
+\item The affine transformation of a Gumbel is still Gumbel: if $\varepsilon\overset{D}\sim Gumbel(\eta,\mu)$, then
+$$\alpha\varepsilon+V\overset{D}\sim Gumbel\Big(V+\alpha\eta,\frac{\mu}{\alpha}\Big),\ \forall\alpha>0\text{ and }V\in\R.$$
+\item The difference of independent Gumbels with the same scale is logistic: if  
+$$\varepsilon_1\overset{D}\sim Gumbel(\eta_1,\mu)\quad\text{and}\quad\varepsilon_2\overset{D}\sim Gumbel(\eta_2,\mu)$$
+are independent, then their difference $$\varepsilon=\varepsilon_1-\varepsilon_2\overset{D}\sim Logistic(\eta_1-\eta_2,\mu).$$ Note that there are also other distributions whose difference is logistic.
+\item The maximum of independent and same-scale Gumbels is still Gumbel: if 
+$$\varepsilon_1\overset{D}\sim Gumbel(\eta_1,\mu)\quad\text{and}\quad\varepsilon_2\overset{D}\sim Gumbel(\eta_2,\mu)$$
+are independent, then their maximum
+$$\varepsilon=\max(\varepsilon_1,\varepsilon_2)\overset{D}\sim Gumbel\Big(\frac{1}{\mu}\ln(e^{\mu\eta_1}+e^{\mu\eta_2}),\mu\Big).$$
+This is the most critical property which means Gumbel distributions are closed under maximization. Also recall that exponential distributions are closed under minimization. By induction, it follows that if $\varepsilon_i\overset{D}\sim Gumbel(\eta_i,\mu)$, $1\leq i\leq n$ are independent, then
+$$\varepsilon=\max_{1\leq i\leq n}\varepsilon_i\overset{D}\sim Gumbel\Big(\frac{1}{\mu}\ln\sum_{i=1}^ne^{\mu\eta_i},\mu\Big).$$
+Note that the mode is called the \textbf{log-sum-exp} function which is convex in $\eta_i$'s.
+\end{enumerate}
+\end{tcolorbox}
+\noindent From this, we derive the choice probabilites. Assume $\varepsilon_i\overset{i.i.d.}\sim Gumbel(0,\mu)$, $1\leq i\leq n$. By Property 4, we have
+$$U_i=V_i+\varepsilon_i\overset{D}\sim Gumbel(V_i,\mu).$$
+Then,
+\begin{align*}
+\p(1|\{1,2,\cdots,n\})&=\p(U_1\geq U=\max_{2\leq i\leq n}U_i)
+\\&=\p(U-U_1\leq 0)\ (U\overset{D}\sim Gumbel\Big(\frac{1}{\mu}\ln\sum_{i=2}^ne^{\mu V_i},\mu\Big)\text{ by Property 6)}\\&=F(0)\text{ ($F$ is the CDF of }Logistic\Big(\frac{1}{\mu}\ln\sum_{i=2}^ne^{\mu V_i}-V_1,\mu\Big)\text{ by Property 5)}\\&=\frac{1}{1+e^{\mu\Big(\displaystyle\frac{1}{\mu}\ln\sum_{i=2}^ne^{\mu V_i}-V_1\Big)}}\\&=\frac{e^{\mu V_1}}{e^{\mu V_1}+e^{\mu V_2}+\cdots+e^{\mu V_n}}.
+\end{align*}
+
+
+
+
+
+
+
+
+
+\end{document}

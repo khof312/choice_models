@@ -1,0 +1,251 @@
+\documentclass[11pt]{article}
+\setlength{\oddsidemargin}{.25in}
+\setlength{\evensidemargin}{.25in} \setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.4in} \setlength{\textheight}{8.5in}
+\def\argmax{\mathop{\rm arg\,max}}
+
+\usepackage[font=small,labelfont=bf]{caption}
+
+\usepackage{xspace,epsfig,amsmath,amssymb,subfig,lmodern}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+
+\newenvironment{sketch}{\noindent\emph{Proof Sketch:}}{$\quad \Box$}
+\newenvironment{proof}{\noindent\emph{Proof:}}{$\quad \Box$}
+\newcommand{\handout}[5]{
+   \renewcommand{\thepage}{\arabic{page}}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{
+    \hbox to 5.78in { {\bf Choice Models in Operations}  \hfill #2
+}
+       \vspace{4mm}
+       \hbox to 5.78in { {\Large \hfill #5  \hfill} }
+       \vspace{2mm}
+       \hbox to 5.78in { {\it #3 \hfill #4} }
+      }
+   }
+   \end{center}
+   \vspace*{4mm}
+}
+
+\begin{document}
+
+\handout{}{}{Instructor: Srikanth Jagabathula}
+{Scribe:  Ryan McNellis} {Lecture 
+ 3 : ARSP Remarks \& Introduction to RUM Models}
+
+\section{ARSP Remarks}
+
+\subsection{Extension of Choice Rules}
+
+Define $\mathcal{S}_{\text{pairs}}$ to be the pairwise collection of subsets of $\mathcal{N}$:
+
+\begin{equation*}
+\mathcal{S}_{\text{pairs}} = \left \{   \{ i, j\}  : 1 \leq i,j \leq n, i \neq j   \right \}
+\end{equation*}
+
+Suppose we specify the choice probabilities for the collection $\mathcal{S}_{\text{pairs}}$. Let $p_{ij}$ denote the probability that $i$ is preferred over $j$, i.e. $p_{ij} = \mathbb{P}(i | \{i,j\})$. Note that $p_{ij} + p_{ji} = 1$. 
+
+\begin{definition}
+	[Extension of a choice rule] Given a stochastic choice function on the collection $\mathcal{S}$, an extension to a ``bigger" collection $\mathcal{S}'$ is a choice function $\mathbb{P}'(\cdot | \cdot)$ such that $\mathbb{P}'(x | \mathcal{B}) = \mathbb{P}(x | \mathcal{B}) \,\,\, \forall \mathcal{B} \in \mathcal{S}$.
+\end{definition}
+
+\begin{theorem}
+Suppose ARSP is satisfied for the collection $\mathcal{S}_{\text{pairs}}$. Then, there exists an extension of the choice rule such that it is stochastically rational for all possible subsets.
+\end{theorem}
+
+Consider extending the choice function on $\mathcal{S}_{\text{pairs}}$ when $n = 3$. Note that one cannot simply define $\pi$ by multiplying the pairwise choice probabilities and renormalizing, e.g.:
+
+\begin{equation}
+\label{eqn:pidef}
+\pi(1 \succ 2 \succ 3) = \frac{p_{12} p_{13} }{z} \, ,\text{where z is a normalizing constant}.
+\end{equation}
+
+If this extension were valid, then $\pi(1 \succ 2 \succ 3) + \pi(1 \succ 3 \succ 2) + \pi(3 \succ 1 \succ 2) = p_{12}$. However, if we define $\pi$ according to ($\ref{eqn:pidef}$), then this does not necessarily hold:
+
+\begin{eqnarray*}
+\pi(1 \succ 2 \succ 3) + \pi(1 \succ 3 \succ 2) + \pi(3 \succ 1 \succ 2) &=& \frac{p_{12} p_{23}}{z} + \frac{p_{13} p_{32}}{z} + \frac{p_{31} p_{12}}{z} \\
+&=& \frac{p_{12} (p_{23}+p_{31})+p_{13}p_{32}}{z} \\
+&\neq& p_{12} \, \, \,\text{in general}
+\end{eqnarray*}
+
+However, given $p_{ij} = \mathbb{P}(i | \{i,j\})$ over $\mathcal{S}_{\text{pairs}}$, the extension $\pi(\succ)$ can be approximated for any $\succ \, \in \mathcal{S}_n$ through Monte Carlo simulation. Simply compute the fraction of times the ordering $\succ$ appears when using the pairwise probabilities $p_{ij}$ to ``generate" valid permutations in $\mathcal{S}_n$. A valid permutation can be generated as follows:
+
+\begin{enumerate}
+	\item $\forall \, i,j: 1 \leq i < j \leq n$, use $p_{ij}$ to generate the pairwise relationship between $i$ and $j$, i.e. sample $i \succ j$ with probability $p_{ij}$, else sample $j \succ i$.
+	\item Check that the generated pairwise relations satisfy transitivity. If so, then we have generated a valid permutation. Else, return to $1$ and try again.
+\end{enumerate}
+
+\subsection{Geometric Interpretation of ARSP}
+
+We now interpret ARSP geometrically, focusing specifically on the collection $\mathcal{S}_{\text{pairs}}$.
+\\
+
+Suppose the stochastic choice funciton $(p_{ij})_{1 \leq i,j \leq n, i \neq j}$ is stochastically rational. Then, there exists a probabiliy mass function $\pi(\cdot)$ over preference lists such that
+
+\begin{equation*}
+p_{ij} = \sum_{\succ \in \mathcal{S}_n : i \succ j} \pi(\succ) = \sum_{\succ \in \mathcal{S}_n} \pi(\succ) \mathbb{I}[i \succ j]\, .
+\end{equation*}
+
+We can write this more compactly using the same technique as in last lecture. Let $\underline{p}$ denote the vector representation of $p_{ij}$. For $n = 2$, 
+
+\begin{align*}
+\underline{p} = \begin{bmatrix}
+p_{12} \\
+p_{21}
+\end{bmatrix}= 
+\begin{bmatrix}
+1 \\
+0
+\end{bmatrix}
+\pi(1 \succ 2) + 
+\begin{bmatrix}
+0 \\
+1
+\end{bmatrix}
+\pi(2 \succ 1) \, .
+\end{align*}
+
+Since $\pi(1 \succ 2)$ and $\pi(2 \succ 1)$ are non-negative and add up to one, $\underline{p} $ is the convex combination of 
+$\begin{bmatrix}
+	1 \\
+	0
+\end{bmatrix}$
+and 
+$\begin{bmatrix}
+0 \\
+1
+\end{bmatrix}$. In other words,  $\underline{p} $ belongs to the convex hull of 
+$\begin{bmatrix}
+1 \\
+0
+\end{bmatrix}$ and
+$\begin{bmatrix}
+0 \\
+1
+\end{bmatrix}$.
+\\~\\
+
+More generally, define $\underline{p}_{\succ}$ as a vector which encodes all possible pairwise relations with respect to $\succ$, i.e. $p_{{\succ}_{ij}} = \mathbb{I}[i \succ j] \quad \forall \, 1 \leq i,j\leq n, i \neq j$. Then, the pairwise probability vector $\underline{p}$, when rational, belongs to the convex hull of the vectors $\{\underline{p}_{\succ} : \, \succ \, \in \mathcal{S}_n\}$:
+
+\begin{equation*}
+\underline{p} = \sum_{\succ \in \mathcal{S}_n} \underline{p}_{\succ} \pi(\succ)
+\end{equation*}
+
+Define the polytope $\mathcal{D}$ as follows:
+
+\begin{equation*}
+\mathcal{D} = \left \{ \underline{x} \in \mathbb{R}^{n(n-1) \times 1} : \underline{x} = \sum_{\succ \in \mathcal{S}_n}\underline{p}_{\succ}  \pi_{\succ} ; \sum_{\succ \in \mathcal{S}_n} \pi_{\succ} = 1, \pi_{\succ} \geq 0 \, \, \, \forall  \succ \, \in \mathcal{S}_n \right \}
+\end{equation*}
+
+\begin{center}
+\begin{figure}[h]
+	\center{\includegraphics[width=0.40\textwidth]{"Figure1".png}}
+	\caption{$\mathcal{D}$ corresponding to $n=3$. The vertices of the polytope belong to the set $\{\underline{p}_{\succ} : \, \succ \, \in \mathcal{S}_n\}$ (note: only four of the vertices are included in the figure). Since $\underline{p} \in \mathcal{D}$, $\underline{p}$ is stochastically rational.}
+\end{figure}
+\end{center}
+
+
+
+$\mathcal{D}$ thus represents the convex hull of  $\{\underline{p}_{\succ} : \, \succ \, \in \mathcal{S}_n\}$. We know that if $\underline{p}$ is stochastically rational, then $\underline{p} \in \mathcal{D}$. Clearly, the converse is true as well: if $\underline{p}$ not stochastically rational, then there does not exist a feasible p.m.f. $\pi$ over the preference lists, i.e. there does not exist a convex combination of the vectors $\{\underline{p}_{\succ} : \, \succ \, \in \mathcal{S}_n\}$ which equals $\underline{p}$. Thus,
+
+\begin{equation*}
+\underline{p} \, \, \, \text{is stochastically rational} \Leftrightarrow \underline{p} \in \mathcal{D} \, .
+\end{equation*}
+
+We can use this interpretation to easily show the equivalency between the ARSP condition and stochastic rationality:
+
+\begin{equation*}
+\underline{p} \, \, \, \text{is stochastically rational} \Leftrightarrow \underline{p} \, \, \, \text{satisfies ARSP}
+\end{equation*}
+
+``$\Rightarrow$": Suppose that $\underline{p}$ is stochastically rational. It follows that $\underline{p} \in \mathcal{D}$. For any $\underline{z} \in \mathbb{R}^{n(n-1) \times 1}$, consider the following optimization problem:
+
+\begin{equation*}
+\max_{\underline{x}} \, \underline{z}^T \underline{x} \qquad s.t. \quad  \underline{x} \in \mathcal{D}
+\end{equation*}
+
+Because this is a linear programming problem, the optimal solution occurs at an extreme point, i.e. $\underline{p}_{\succ^*}$ for some preference list $\succ^* \in \mathcal{S}_n$. Also, because $\underline{p} \in \mathcal{D}$, $\underline{p}$ is a feasible solution to the LP. Thus, for all $\underline{z} \in \mathbb{R}^{n(n-1) \times 1}$,
+
+\begin{equation*}
+\underline{z}^T \underline{p} \leq \underline{z}^T \underline{p}_{\succ^*} = \max_{\succ \in \mathcal{S}_n} \, \underline{z}^T \underline{p}_{\succ} \, .
+\end{equation*}
+
+This is simply the ARSP condition applied to the collection $\mathcal{S}_{\text{pairs}}$.
+\\
+
+``$\Leftarrow$": Suppose $\underline{p}$ is not rational. Then, $\underline{p} \notin \mathcal{D}$. It follows that there exists a separating hyperplane between the point $\underline{p}$ and polytope $\mathcal{D}$, i.e. there exists a $\underline{z} \in \mathbb{R}^{n(n-1) \times 1}$ such that $\underline{z}^T\underline{p} > 0$ and $\underline{z}^T\underline{x} \leq 0 \, \, \, \forall \, \underline{x} \in \mathcal{D}$. In particular, the latter condition implies that $\underline{z}^T \underline{p}_{\succ} \leq 0 \, \, \, \forall \, \succ \, \in \mathcal{S}_n$. 
+
+\begin{center}
+	\begin{figure}[h]
+		\center{\includegraphics[width=0.47\textwidth]{"Figure2".png}}
+		\caption{$\mathcal{D}$ corresponding to $n=3$. $\underline{p}$ is not stochastically rational, and thus $\underline{p} \notin \mathcal{D}$. This implies the existance of a separating hyperplane $\underline{z}$.}
+	\end{figure}
+\end{center}
+
+Combining these inequalities, we arrive at
+
+\begin{equation*}
+\underline{z}^T \underline{p} > \max_{\succ \in \mathcal{S}_n} \underline{z}^T \underline{p}_{\succ} \, ,
+\end{equation*}
+
+i.e., $\underline{p}$ does not satisfy ARSP.
+
+
+
+\section{Random Utility Maximization (RUM) Models}
+
+Suppose $\mathcal{N}$ is finite. Then, any probability mass function over preference lists can be represented by a distribution over utility vectors.
+\\
+
+Suppose we are given $\pi: \mathcal{S}_n \rightarrow [0,1]$. Let $\underline{\textsf{U}} \in \mathbb{R}^n$ be a random utility vector corresponding to the $n$ products. Then, we can easily construct a distribution $F_{\underline{\textsf{U}}}(\cdot)$ which is consistent with $\pi$. 
+\\
+
+First, for all preference lists $\succ \, \in \mathcal{S}_n$, find a utility function $u_{\succ} : \mathcal{N} \rightarrow \mathbb{R}$ which represents $\succ$, i.e. $u_{\succ}(i) > u_{\succ}(j) \Leftrightarrow i \succ j$. Let $\underline{u}_{\succ}$ be the vector representation of $u_{\succ}(\cdot)$ such that the $i^{\text{th}}$ component of $\underline{u}_{\succ}$ is $u_{\succ}(i)$. Then, define $F_{\underline{\textsf{U}}}(\cdot)$ as follows:
+
+\begin{equation*}
+\begin{cases} 
+\mathbb{P}_F(\underline{\textsf{U}} = \underline{u}_{\succ}) = \pi(\succ) \quad \text{for any} \succ \, \in \mathcal{S}_n, \, \text{and} \\ 
+\mathbb{P}_F(\underline{\textsf{U}} = \underline{y}) = 0 \qquad \text{when} \enspace \underline{y} \neq \underline{u}_{\succ} \enspace \text{for any} \succ \, \in \mathcal{S}_n
+\end{cases}
+\end{equation*}
+
+Clearly, this distribution over utility vectors is consistent with the probability mass function $\pi$.
+\\
+
+On the other hand, suppose we are given a distribution $F_{\underline{\textsf{U}}}(\cdot)$ over utility vectors. This distribution induces a probability mass function over rankings, given by
+
+\begin{equation*}
+\mathbb{P} (1 \succ 2 \succ \cdots \succ n) = \mathbb{P} (\textsf{U}_1 > \textsf{U}_2 > \cdots > \textsf{U}_n)
+\end{equation*}
+
+For example, in the case of two products, we might be given a distribution $F_{\underline{\textsf{U}}}(\cdot)$ which resembles a multivariate Gaussian: 
+
+
+\begin{align*}
+\begin{bmatrix}
+\textsf{U}_{1} \\
+\textsf{U}_{2}
+\end{bmatrix}\sim \mathcal{N} \left (  
+\begin{bmatrix}
+3 \\
+7
+\end{bmatrix}
+, \sigma^2 I\right )
+\end{align*}
+
+The induced probability mass function $\pi$ can be derived as follows:
+
+\begin{equation*}
+\begin{cases} 
+\pi(1 \succ 2) = \mathbb{P}_F(\textsf{U}_1 > \textsf{U}_2) \\
+\pi(2 \succ 1) = \mathbb{P}_F(\textsf{U}_2 > \textsf{U}_1)
+\end{cases}
+\end{equation*}
+
+\end{document}
