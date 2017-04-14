@@ -1,0 +1,422 @@
+\documentclass[11pt]{article}
+\setlength{\oddsidemargin}{.25in}
+\setlength{\evensidemargin}{.25in} \setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.4in} \setlength{\textheight}{8.5in}
+\def\argmax{\mathop{\rm arg\,max}}
+
+\usepackage{xspace,epsfig,amsmath,amssymb,subfig,lmodern,mathtools,color}
+
+
+\usepackage{verbatim}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\tikzset{%
+  >={Latex[width=2mm,length=2mm]},
+  % Specifications for style of nodes:
+            base/.style = {rectangle, rounded corners, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+            start/.style = {base, fill=blue!30},
+            middle/.style = {base, fill=red!30},
+            end/.style = {base, fill=green!30},
+            process/.style = {base, minimum width=2.5cm, fill=orange!15,
+                           font=\ttfamily},
+}
+
+
+\usetikzlibrary{shapes}
+\newcommand{\A}{\ensuremath{\mathcal{A}}\xspace}
+\newcommand{\B}{\ensuremath{\mathcal{B}}\xspace}
+\newcommand\pa[1]{\ensuremath{\left(#1\right)}}
+
+
+
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+
+\newenvironment{sketch}{\noindent\emph{Proof Sketch:}}{$\quad \Box$}
+\newenvironment{proof}{\noindent\emph{Proof:}}{$\quad \Box$}
+\newcommand{\handout}[5]{
+   \renewcommand{\thepage}{\arabic{page}}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{
+    \hbox to 5.78in { {\bf Choice Models in Operations}  \hfill #2
+}
+       \vspace{4mm}
+       \hbox to 5.78in { {\Large \hfill #5  \hfill} }
+       \vspace{2mm}
+       \hbox to 5.78in { {\it #3 \hfill #4} }
+      }
+   }
+   \end{center}
+   \vspace*{4mm}
+}
+\newcommand{\Pr}{\mathrm{Pr}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Cor}{\mathrm{Cor}}
+\newcommand{\Gumbel}{\mathrm{Gumbel}}
+
+
+
+
+\begin{document}
+
+\handout{}{}{Instructor: Srikanth Jagabathula}
+{Scribe: Ziran Liu } {Lecture 7 :  NL Model (continued) and ML Model}
+
+
+
+\noindent Setting: We have $m$ nests and $n$ products in each nest.
+$$
+U_{ij} = W_l+Y_{lj}+\tilde{\varepsilon}_l+\tilde{\varepsilon}_{lj},
+$$
+where $l$ indicates the nest, $j$ indicates the product, $W_l$ and $Y_{lj}$ are deterministic, $\tilde{\varepsilon}_l \text{ and } \tilde{\varepsilon}_{lj}$ are random.\\
+
+\noindent Objective: Capture any correlations in utilities among the products. (eg. Red Bus/Blue Bus)\\
+
+\noindent Assumptions:
+\begin{itemize}
+    \item[(A1)] $\tilde{\varepsilon}_l \text{ and } \tilde{\varepsilon}_{lj}$ are ind.
+    \item[(A2)] $\tilde{\varepsilon}_{lj} \overset{D}{\sim} Gumbel(0,\mu_l)$, $\mu_l > 0$.
+    \item[(A3)] [Key Assumption] $\tilde{\varepsilon}_l$'s are distributed s.t. $\max_{j \in S_{l'}} U_{l'j} \overset{D}{\sim} Gumbel$ with scale $\lambda_{l'}$ for all subset $S_{l'}\subseteq S_l$.
+\end{itemize}
+With the above assumptions, we can show that
+\begin{eqnarray}
+&&\Pr(jl\text{ when all items are offered}) \nonumber\\
+&=&\frac{e^{\lambda_lW_l+\frac{\lambda_l}{\mu_l}IV_l}}{\sum\limits_{l'=1}^{m}e^{\lambda_{l'}W_{l'}+\frac{\lambda_{l'}}{\mu_{l'}}IV_{l'}}}\cdot\frac{e^{\mu_lY_{lj}}}{\sum\limits_{j'\in S_l} e^{\mu_l Y_{lj'}}}, \nonumber
+\end{eqnarray}
+where $IV_l\coloneqq \log(\sum\limits_{j\in S_l}e^{\mu_lY_{lj}})$ is Inclusive Value of nest $l$. $\frac{1}{\mu}$ is the location parameter
+
+\section{Correlation Structure}
+\subsection{Correlation among products in the same nest}
+Recall that $\varepsilon_{lj} = \tilde{\varepsilon}_l+\tilde{\varepsilon}_{lj}$. Then
+$$
+\Cov(\varepsilon_{lj},\varepsilon_{lj'}) = \Cov(\tilde{\varepsilon}_l+\tilde{\varepsilon}_{lj},\tilde{\varepsilon}_l+\tilde{\varepsilon}_{lj'})=\Var(\tilde{\varepsilon_l}), \text{ [From (A1)]}
+$$
+$$
+\Var(\tilde{\varepsilon}_{lj}) = \Var(\tilde{\varepsilon}_l+\tilde{\varepsilon}_{lj})=\Var(\tilde{\varepsilon}_l)+\Var(\tilde{\varepsilon}_{lj}) =\Var(\tilde{\varepsilon}_l) + \frac{\pi^2}{6\mu_l^2},  \text{ [From (A1)]}
+$$
+and 
+$$
+\Var(\tilde{\varepsilon}_l) = \Var(\varepsilon_{lj}) - \Var(\tilde{\varepsilon}_{lj}) = \frac{\pi^2}{6\mu_l^2} \bigg[1-\frac{\lambda_l^2}{\mu_l^2}\bigg].
+$$
+Since $\Var(\cdot)$ is $\geq 0$, we have that $0\leq \lambda_l \leq \mu_l$. Also, we have that the utilities of the items in the same nest are always positively correlated.
+$$
+\Cov(\varepsilon_{lj}, \varepsilon_{l'j'}) = \Cov(\tilde{\varepsilon}_l+\tilde{\varepsilon}_{lj},\tilde{\varepsilon}_{l'}+\tilde{\varepsilon}_{l'j'}) = 0.
+$$
+\subsection{Correlations between items across nests}
+NO correlations between items from different nests.
+\begin{eqnarray}
+\Cor(\varepsilon_{lj},\varepsilon_{lj'}) &=& \frac{\Cov(\varepsilon_{lj},\varepsilon_{lj'})}{\sqrt{\Var(\varepsilon_{lj})\Var(\varepsilon_{lj'})}}\nonumber\\
+&=& \frac{\frac{\pi^2}{6\mu_l^2} \bigg[1-\frac{\lambda_l^2}{\mu_l^2}\bigg]
+}{\sqrt{\bigg(\frac{\pi^2}{6\lambda_l^2}\bigg)^2}}\nonumber\\
+&=& 1-\frac{\lambda_l^2}{\mu_l^2}. \nonumber
+\end{eqnarray}
+We can think $\lambda_l/\mu_l$ as a measure of the degree of the correlation among the products in the same nest, $0 \leq \lambda_l/\mu_l \leq 1$.
+
+\subsection{Normalization of the Nested Logit model}
+It is possible to estimate both $\lambda$ and $\mu$ just from choice data.
+
+We can only estimate that ration $\frac{\lambda_l}{\mu_l}$ for each nest. Therefore, we normalized and set $\lambda_l=1$ for all $l$.
+
+And, let the \textsl{nest disimilarity parameter} $\rho_l = \frac{1}{\mu_l}$ and $V_{lj} = e^{W_l}+\mu_lY_{lj}$.
+Then, choice probability
+$$
+\Pr = \frac{\big(\sum\limits_{j'\in S_l}V_{lj}\big)^{\rho_l}}{\sum\limits_{l'=1}^{m}\big(\sum\limits_{j' \in S_{l}}V_{l'j'}\big)^{\rho_{l'}}}\cdot\frac{V_{lj}}{\sum\limits_{j' \in S_l} V_{lj'}}.
+$$
+What happens when $\rho_l > 1$ for some $l$?
+We still get a valid stochastic choice rule that obeys the usual probability laws.
+However, \textsl{the resulting stochastic rule is not rational}.
+
+
+
+
+
+
+
+
+
+\vspace{10pt}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm,
+    every node/.style={fill=white, font=\sffamily}, align=center]
+    \centering
+    
+  % Specification of nodes (position, etc.)
+  \node (start)     [start]              {RUM Framework};
+  \node (process)   [process, below of=start]          {Assumptions on Utilities};
+  \node (end)       [end, below of=process]
+                                                      {NL Choice Prob.};
+                                                      
+  \draw[->]             (start) -- (process);
+  \draw[->]             (process) -- (end);
+  \draw[->]             (end.east) -- ++(2.0,0) -- ++(0,2) -- ++(0,1) --                
+     node[xshift=1.0cm,yshift=-1.5cm, text width=2.5cm]
+     {$0 \leq \rho_l \leq 1$}(start.east);
+  \end{tikzpicture}
+\end{center}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Examples of applications}
+
+
+
+\begin{itemize}
+    \item[1.] Model the purchase of apps on the apps on the App Store.
+    
+    \begin{tikzpicture}[every node/.style = {shape=rectangle, rounded corners,
+    draw, align=center,
+    top color=white, bottom color=blue!20},level 1/.style={sibling distance=6em},level 2/.style={sibling distance=2em}]]
+  \node {Apps}
+    child { node {Games} 
+     child { node {} }
+     child { node {} }
+     child { node {} }}
+    child { node {Productivity} 
+     child { node {} }
+     child { node {} }
+     child { node {} }}
+    child { node {Utility} 
+     child { node {} }
+     child { node {} }
+     child { node {} }}
+    child { node {Pro} 
+     child { node {} }
+     child { node {} }
+     child { node {} }};
+\end{tikzpicture}
+
+    \item[1'.] Another way of modelling the purchase of apps on the apps on the App Store .
+    
+    \begin{tikzpicture}[every node/.style = {shape=rectangle, rounded corners,
+    draw, align=center,
+    top color=white, bottom color=blue!20},level 1/.style={sibling distance=8em},level 2/.style={sibling distance=2em}]]
+  \node {Apps}
+    child { node {Free} 
+     child { node {} }
+     child { node {} }
+     child { node {} }
+     child { node {} }
+     child { node {} }}
+    child { node {One-time payment} 
+     child { node {} }
+     child { node {} }
+     child { node {} }}
+    child { node {Subscription} 
+     child { node {} }
+     child { node {} }
+     child { node {} }
+     child { node {} }};
+\end{tikzpicture}
+    
+    
+    
+    
+    
+    
+    \item[2.] Decision tree of finding a hotel.
+    
+    
+        \begin{tikzpicture}[every node/.style = {shape=rectangle, rounded corners,
+    draw, align=center,
+    top color=white, bottom color=blue!20},level 1/.style={sibling distance=10em},level 2/.style={sibling distance=8em}]]
+  \node {Apps}
+    child { node {1-star}}
+    child { node {2-star} 
+     child { node {Mercer} }
+     child { node {Macdougal} }
+     child { node {Other Neighborhood} }};
+\end{tikzpicture}
+    
+    
+    \item[3.]Modelling the purchase option.
+    
+\begin{tikzpicture}[every node/.style = {shape=rectangle, rounded corners,
+    draw, align=center,
+    top color=white, bottom color=blue!20},level 1/.style={sibling distance=4em},level 2/.style={sibling distance=2em}]]
+  \node {Apps}
+    child { node {80\%}}
+    child { node {1\%}}
+    child { node {$\cdots$}}
+    child { node {1\%}}
+    child { node {1\%}};
+\end{tikzpicture}
+
+Furthermroe, if we cut off the last $1\%$ population, the purchase option becomes the follwoing.
+
+\begin{tikzpicture}[every node/.style = {shape=rectangle, rounded corners,
+    draw, align=center,
+    top color=white, bottom color=blue!20},level 1/.style={sibling distance=4em},level 2/.style={sibling distance=2em}]]
+  \node {Apps}
+    child { node {$\frac{80}{99}$}}
+    child { node {$\frac{1}{99}$}}
+    child { node {$\cdots$}}
+    child { node {$\frac{1}{99}$}}
+    child { node {$\frac{1}{99}$}};
+\end{tikzpicture}
+\end{itemize}
+
+
+
+
+
+
+
+
+\section{Mixed Logit Model (ML)}
+Let $U_j = V_j+\varepsilon_j, \text{ for } j=1,\ldots, n$.
+Objective: To capture customer-level heterogeneity. In the process, we introduce correlations among product utilities.
+\vspace{10pt}
+
+
+
+
+
+
+
+\begin{tikzpicture}[
+    grow=right,
+    level 1/.style={sibling distance=3.5cm,level distance=5.2cm},
+    level 2/.style={sibling distance=3.5cm, level distance=6.7cm},
+    edge from parent/.style={very thick,draw=blue!40!black!60,
+        shorten >=5pt, shorten <=5pt},
+    edge from parent path={(\tikzparentnode.east) -- (\tikzchildnode.west)},
+    kant/.style={text width=2cm, text centered, sloped},
+    every node/.style={text ragged, inner sep=2mm},
+    punkt/.style={rectangle, rounded corners, shade, top color=white,
+    bottom color=blue!50!black!20, draw=blue!40!black!60, very
+    thick }
+    ]
+
+\node[punkt, text width=4.2em] {MNL limitations}
+    %Lower part lv1
+child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=2,
+         text ragged] {
+            \textbf{Correlations}
+                  \nodepart{second}
+            Heterogeneity among customers.
+        }
+        child {
+            node [punkt] {
+                MNL
+            }
+            edge from parent
+                node[below, kant,  pos=.6] {}
+        }
+        edge from parent
+            node[kant, below, pos=.6] {}
+    }
+    child {
+        node[punkt] [rectangle split, rectangle split, rectangle split parts=2,
+         text ragged] {
+            \textbf{Correlations}
+                  \nodepart{second}
+            among unobservables \\ in product utilities.
+        }
+        child {
+            node [punkt] {
+                NL
+            }
+            edge from parent
+                node[below, kant,  pos=.6] {}
+        }
+        edge from parent
+            node[kant, below, pos=.6] {}
+    };
+\end{tikzpicture}
+
+
+
+\vspace{10pt}
+
+
+
+Consider customer $i \text{ and } j$,
+\begin{eqnarray}
+V_{ij}&=&f(\text{attributes of customer }i \text{ and product} j)\nonumber\\
+&=& \sum\limits_k\beta_{ik}\cdot n_{ijk} = \beta_i^T\cdot x_{ij}.\nonumber
+\end{eqnarray}
+We suppose that each customer $i$ makes choices according to an MNL model. In particular,
+$$
+\mathbb{P}(j|S) = \frac{e^{\beta_i^T}x_{ij}}{\sum_{j'\in S}e^{\beta_i^T\cdot x_{ij'}}}.
+$$
+We let each customer have a different $\beta_i$, which are also referred to as the ``taste'' vectors of the customers.
+In other words, customers have different ``tastes''. $\beta_i$'s are also called the \underline{utility partworth}.
+
+\subsection{Example} Two attributes: Color (Black, Red) and Size (Small, Large).
+Full factorial product universe: all possible attribute-level combinations.
+\begin{eqnarray}
+BS&=&\beta_B+\beta_S\nonumber\\
+BL&=&\beta_B+\beta_L\nonumber\\
+RS&=&\beta_R+\beta_S\nonumber\\
+RL&=&\beta_R+\beta_L\nonumber
+\end{eqnarray}
+If there is sufficient data per customer, then we can describe the purchase/choice behavior of each customer using a separate MNL model.
+However, in many partial settings, there are only a few samples available for each customer.
+Therefore, a very general model with a separate $\beta_i$ for each customer will not be identifiable.
+To address this issue, we make the model parsimonious in the number of parameters by making distributional assumptions on $\beta_i$'s.
+
+There are two ways in which we can make distributional assumptions.
+\begin{itemize}
+    \item[I.] \underline{Discrete}: We assume that the underlying customer population is compromised of $K$ classes/segments s.t. all the customers in class $k$ have teh parameter/taste vector $\beta_k$. we also assume that class $k$ has size $\alpha_k \geq 0$ such that $\sum\limits_{k=1}^{K} \alpha_k= 1$.
+    
+    This results in the following generative model when teh customers class membership is not identified.
+    In each choice instance, the customer samples her class membership s.t. class $k$ is chosen with probability $\alpha_k$. Conditioned on choosing an item according to an MNL model with parameter vector $\beta_k$. 
+    $$
+    \mathbb{P}(j|S) = \sum\limits_{k=1}^K \alpha_k\cdot\frac{e^{\beta_k^T\cdot x_j}}{\sum_{j'\in S}e^{\beta_k^T\cdot x_{j'}}}.
+    $$
+    
+    Let's consider the following cases:
+    
+\begin{itemize}
+    \item[1.] Suppose we are given aggregated sales transactions data. In particular, for a collection of subsets$S_1,S_2,\ldots,S_m$, we are given $n_{jt} = $ the number of purchases of item $j$ when $S_t$ was offered, $\forall j \in S_t, t=1,\ldots m$.
+    The date are aggregated all customers and we don't observe the customer ID. These data are also called aggregated transaction data.
+    Assuming that customers make choices according to a K-LC-MNL model.
+    The data likelihood is 
+    
+    $$
+    \prod\limits_{t=1}^m \prod_{j\in S_t}\big(\mathbb{P}(j|S_t)\big)^{n_{jt}} = 
+    \prod\limits_{t=1}^m \prod_{j\in S_t}\bigg(\sum\limits_{k=1}^K \alpha_k \frac{e^{\beta_k^T\cdot x_j}}{\sum_{j' \in S_t} e^{\beta_k^T\cdot x_{j'}}}\bigg)^{n_{jt}}.
+    $$
+    \item[2.] Suppose, instead, we are given panel data, i.e., the transactions are tagged by the customer ID. In particular, for $u=1,\ldots,U$, we observe the index of users/customers. Collection of tuples $D_u = {(j_{u_1},S_{u_1}),\ldots,(j_{u_n},S_{u_m})}$ s.t. user $u$ purchased item $j_{ut}$ when offered subset $S_{ut}, t=1,\ldots,m.$
+    Assuming that customers purchase according to a K-LC-MNL model, what is $\log$-likelihood
+    $$
+    \sum\limits_{u=1}^U \log \sum\limits_{k=1}^K \alpha_k \prod_{t=1}^m\frac{e^{\beta_k^T}\cdot x_{j_{ut}}}{\sum\limits_{j_{ut}'\in S_{ut}}e^{\beta_k^T\cdot x_{j_{ut}'}}}.
+    $$
+     
+    
+    
+\end{itemize}
+    
+
+\end{itemize}
+
+
+
+\end{document}
