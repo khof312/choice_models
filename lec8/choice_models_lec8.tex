@@ -1,0 +1,226 @@
+\documentclass[11pt]{article}
+\setlength{\oddsidemargin}{.25in}
+\setlength{\evensidemargin}{.25in} \setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.4in} \setlength{\textheight}{8.5in}
+\def\argmax{\mathop{\rm arg\,max}}
+
+\usepackage{xspace,epsfig,amsmath,amssymb,subfig,lmodern}
+\usepackage{accents}
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\usepackage{commath}
+\newenvironment{sketch}{\noindent\emph{Proof Sketch:}}{$\quad \Box$}
+\newenvironment{proof}{\noindent\emph{Proof:}}{$\quad \Box$}
+\newcommand{\handout}[5]{
+   \renewcommand{\thepage}{\arabic{page}}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{
+    \hbox to 5.78in { {\bf Choice Models in Operations}  \hfill #2
+}
+       \vspace{4mm}
+       \hbox to 5.78in { {\Large \hfill #5  \hfill} }
+       \vspace{2mm}
+       \hbox to 5.78in { {\it #3 \hfill #4} }
+      }
+   }
+   \end{center}
+   \vspace*{4mm}
+}
+
+\begin{document}
+
+\handout{}{}{Instructor: Srikanth Jagabathula}
+{Scribe:  Omar El Housni } {Lecture 8 :  Mixed logit models}
+
+We want to capture the heterogeneity in the preferences of customers through their " taste" vectors. This results in a mixture of MNL models which represents a very general and flexible model class. Depending on the form of the mixture distribution, there are broadly two types of ML models:
+\begin{itemize}
+\item {\bf LC-MNL (Latent Class-MNL):} Discrete distribution with a finite support: $K$ classes.
+\item {\bf RPL (Random Parameters Logit):} Continuous mixture distribution, (it's also called random coefficients MNL model).
+\end{itemize}
+
+\section{RPL model class}
+Consider $f(.)$ a distribution over the parameters of the logit model. The choice probabilities are given by
+$$ \mathbb{P} (j \vert S ) = \int_{\ubar\beta \in \mathbb{R}^d } \frac{ e^{\ubar{\beta}  ^T x_j}}{\sum_{i \in S_t} e^{\ubar{\beta}^T x_i}} f(\ubar{\beta}) d\ubar{\beta} $$
+where the products are represented by d-dimensional feature vector. 
+
+The most popular mixing distribution is the Multivariate Gaussian distribution with mean $\ubar \mu  \in \mathbb{R}^{d \times 1}$ and variance-covariance matrix $ \Sigma_{ d \times d} \succeq 0 $. The simplest member of this family is obtained by $ \Sigma = \sigma^2 I_{ d \times d} $ where $ I_{ d \times d}$ is the $d \times d$ identity matrix. In this case, we have
+$$ \mathbb{P} (j \vert S ) = \int_{\ubar\beta \in \mathbb{R}^d } \frac{ e^{\ubar{\beta}  ^T x_j}}{\sum_{i \in S_t} e^{\ubar{\beta}^T x_i}}  \prod_{k=1}^d f(\beta_k) d\beta_k. $$
+
+\noindent
+
+\underline{\bf Remarks:}
+\begin{enumerate}
+\item {\bf Modeling / Incorporating individual-level features:}
+Suppose we have choice observations from customers who are represented as $K$-dimensional feature vector $ \ubar z \in \mathbb{R}^k$. For example, let say $k=2$ and the features are age and income. A customer for instance who is 24 years old and has an annual income of 100k is represented by a two dimensional vector $[24 \; \; 100k]$. 
+
+To capture individual-level features, we consider the following hierarchical model:
+\begin{enumerate}
+\item Sample $\ubar \beta $ according to $ \ubar \beta = A \ubar z + \ubar \epsilon$ where  $\ubar \epsilon$ is random.
+\item Choose items according to an MNL model with taste $ \ubar \beta$.
+\end{enumerate}
+
+\item {\bf Generality of the ML model}
+At the aggregate level, the ML model can capture the MNL and NL models. 
+\begin{enumerate}
+\item  \underline{MNL $ \in$ ML :} Put a point mass on one $\ubar \beta$ vector.
+\item \underline{NL $ \in $ ML:} 
+
+Recall the NL model
+$$ U_{lj} = r^T \ubar x_{lj} + \tilde{\epsilon}_l +  \tilde{\epsilon}_{lj}$$ We want to have
+$$ U_{lj} = \ubar \beta ^T \ubar y_{lj} +   \tilde{\epsilon}_{lj}$$
+We can take $$ \ubar y_{lj} = [ \ubar x_{lj}  \; \vert  e_l ] $$ and
+$$ \ubar \beta = [ \ubar r \; \vert \; \tilde{\epsilon}_1 \; \vert \; \tilde{\epsilon}_2 \; \vert  \ldots \vert \tilde{\epsilon}_n  ]$$
+where $ e_l$ is the unit vector in $\mathbb{R}^n$ with $1$ at position $l$ and $0$ otherwise.
+
+\item Most generally, McFadden and Train (2000) showed that the ML model can approximate any RUM model "arbitrarely closely".
+
+\underline{ Proof Idea}: Consider RUM model of the form $ U_j = \ubar \alpha ^T \ubar x_j$ where $ \ubar \alpha \overset{D}{\sim} F(.)$. From this we can construct the following instance of the ML class:
+$$ \tilde{U_j} = \ubar \alpha^T \ubar x_j + \frac{1}{c} \epsilon_j $$
+where $ {\epsilon}_j \overset{D}{\sim} \text{Gumbel}(0,1)$  and $ \ubar{\alpha } \overset{D}{\sim} F(.) $
+\end{enumerate}
+
+\item {\bf Comment on how these models are used in Econ \& Marketing:}
+Generally speaking, customer-level heterogeneity is considered a " nuisance" in Econ whereas it is the 'focus' in Marketing. In Econ, we focus more on understanding the aggregate preferences of a population in order to derive policy implications. In particular, the precise form of distribution is less relevant and the focus is more on the mean/var of the parameters.
+In marketing, the focus typically is in individual-level heterogeneity so that the firm can customize its marketing activity to individual preferences. In particular, we focus on recovering the form of the distribution.
+
+\end{enumerate}
+
+\section{Taking the models to data}
+We focus now on estimating the parameters of an MNL model.\\
+
+
+\underline{\bf Data:} We have choice observations of the form $(j_t, S_t), \; t=1, \ldots T$ where product $j_t$ was chosen from $S_t$ in choice instance $t$. The data are generated according to an MNL model where $$ U_j = \beta_j + \epsilon_j $$ for $j=1, \ldots, n$ and $ \epsilon_j$ are iid Gumbel(0,1).\\
+
+
+\underline{\bf Goal:} Estimate the parameters $\beta_j$ of the model. We carry out the estimation using the max likelihood estimation (MLE) technique. We first write down the likelihood of the data 
+$$ L ( \ubar \beta ) = \prod_{t=1}^T \frac{e^{ \beta_{j_t}}}{\sum_{i \in S_t} e^{\beta_i}}.$$
+
+We now take the log to get the data log-likelihood function
+
+$$ l ( \ubar \beta ) = \log  L ( \ubar \beta ) = \sum_{t=1}^T  \log \frac{e^{ \beta_{j_t}}}{\sum_{i \in S_t} e^{\beta_i}} =  \sum_{t=1}^T \left( \beta_{j_t} - \log \sum_{i \in S_t} e^{\beta_i} \right). $$
+
+The above expression can be simplified further. Suppose the data consist of $L$ different offer sets $S_1, S_2,\ldots S_L$. We define the following counts:
+\begin{align*}
+ c_{jr} &= \#\text { of times j was purchased when $S_r$ was on offer} \\
+ c_{j.}& = \sum_{r=1}^L c_{jr} \; \text { is the number of times j was choosen in the data} \\
+ c_{.r} &= \sum_{j \in S_r}c_{jr} \; \text { is the number of times $S_r$ was offered in the data} 
+\end{align*}
+
+Under this notations, we can write 
+\begin{align*}
+l ( \ubar \beta )  &= \sum_{t=1}^T  \beta_{j_t} - \sum_{t=1}^T\log \sum_{i \in S_t} e^{\beta_i} \\
+&= \sum_{j=1}^n   c_{j.} \beta_{j} - \sum_{r=1}^L  c_{.r}  \log \sum_{i \in S_r} e^{\beta_i} \\
+\end{align*}
+Therefore $c_{j.} $ and $c_{.r}$ are the sufficient data for the purpose of estimating MNL parameters. We want to solve the following maximization problem
+$$ \max_{\ubar \beta} \;  l ( \ubar \beta )  =  \max_{\ubar \beta}  \; \sum_{j=1}^n   c_{j.} \beta_{j} - \sum_{r=1}^L  c_{.r}  \log \sum_{i \in S_r} e^{\beta_i}$$
+We first focus on the FOC, consider
+\begin{align*}
+\frac{\partial l(\ubar \beta)}{\partial \beta_k} &= c_{k.} - \sum_{r: k \in S_r} c_{.r} \frac{e^{\beta_k}}{\sum_{i \in S_r} e^{\beta_i}} \\
+&= c_{k.} - \sum_{r: k \in S_r} c_{.r} q_{kr} ( \ubar \beta) \\
+&= c_{k.} - \sum_{r=1}^L c_{.r} q_{kr} ( \ubar \beta) \\
+\end{align*}
+where $q_{kr} ( \ubar \beta)$ is the probability of choosing $k$ from $S_r$ under parameter vector $ \ubar \beta$ and $q_{kr} ( \ubar \beta)=0$ if $ k \notin S_r$. 
+
+Setting the partial derivatives equal to $0$ we get
+$$c_{k.} = \sum_{r=1}^L c_{.r} q_{kr} ( \ubar \beta)  \qquad k=1,\ldots,n $$
+The above set of equations say that at the stationary point, the observed number of purchases of each item in the data must be equal to the expected number of purchases for the product. To show that the optimal solution occurs at a stationary point, we compute the Hessian and show that it is negative-semi definite. Let us compute the Hessian.
+\begin{align*}
+\frac{\partial^2 l(\ubar \beta)}{\partial \beta_k \beta_{k'}} &= - \sum_{r=1}^L c_{.r} \frac{\partial }{\partial \beta_{k'}}     q_{kr} ( \ubar \beta) \\
+&= - \sum_{r=1}^L c_{.r} \frac{\partial }{\partial \beta_{k'}}   \frac{e^{\beta_k}}{\sum_{i \in S_r} e^{\beta_i}}  \\
+\end{align*}
+
+We have 
+$$ \frac{\partial }{\partial \beta_{k'}}   \frac{e^{\beta_k}}{\sum_{i \in S_r} e^{\beta_i}}
+= \left\{
+    \begin{array}{ll}
+       - \frac{e^{\beta_k}e^{\beta_{k'}}}{\left( \sum_{i \in S_r} e^{\beta_i} \right)^2 }                                & \mbox{if } k \neq k' , k' \in S_r \\
+        \frac{e^{\beta_k}}{\sum_{i \in S_r} e^{\beta_i}} -       \left( \frac{e^{\beta_k}}{\sum_{i \in S_r} e^{\beta_i}}\right)^2                          & \mbox{if } k=k'
+    \end{array}
+\right.
+$$
+
+With our notations, we have 
+
+$$ \frac{\partial }{\partial \beta_{k'}}   q_{kr} ( \ubar \beta)
+= \left\{
+    \begin{array}{ll}
+      -q_{kr} ( \ubar \beta)     q_{k'r} ( \ubar \beta)                     & \mbox{if } k \neq k' , k' \in S_r \\
+       q_{kr} ( \ubar \beta) ( 1-q_{kr} ( \ubar \beta)       )   & \mbox{if } k=k'
+    \end{array}
+\right.
+$$
+
+Hence,
+
+$$\frac{\partial^2 l(\ubar \beta)}{\partial \beta_k \beta_{k'}} 
+= \left\{
+    \begin{array}{ll}
+        \sum_{r=1}^L c_{.r} q_{kr} ( \ubar \beta)     q_{k'r} ( \ubar \beta)                     & \mbox{if } k \neq k' , k' \in S_r \\
+       -  \sum_{r=1}^L c_{.r}q_{kr} ( \ubar \beta) ( 1-q_{kr} ( \ubar \beta)   )       & \mbox{if } k=k'
+    \end{array}
+\right.
+$$
+We want to show that the Hessian is semi-definite positive. First let us introduce the following definition and Theorem.
+
+\begin{definition}
+A matrix $D$ is diagonally dominant if $ \vert D_{ii} \vert  \geq \sum_{j \neq i} \vert D_{ij} \vert \;  \forall i$.
+\end{definition}
+
+\begin{theorem}
+If $D$ is a symmetric diagonally dominant matrix with non-negative diagonal elements, then $D$ is positive semi-definite.
+\end{theorem}
+
+Let us show that $H$ is diagonally dominant
+\begin{align*}
+ \sum_{k' \neq k} \abs{ \frac{\partial^2 l(\ubar \beta)}{\partial \beta_k \beta_{k'}} } &=  \sum_{r=1}^L c_{.r} q_{kr} ( \ubar \beta)     \sum_{k' \neq k} q_{k'r} ( \ubar \beta)   \\
+ &=  \sum_{r=1}^L c_{.r} q_{kr} ( \ubar \beta)     (1- q_{kr} ( \ubar \beta) )   \\
+ &= \abs{\frac{\partial^2 l(\ubar \beta)}{\partial ^2\beta_k }}
+\end{align*}
+where the last equality follows from the fact that $\sum_{k'} q_{k'r} ( \ubar \beta ) =1 \; \forall r$. Hence $-H$ is diagonally dominant and has non-negative diagonal elements. Therefore, from the above Theorem $-H$ is positive semi-definite and consequently $H$ is negative semi-definite as desired.
+
+\
+\
+
+\noindent
+\underline{{\bf Newton's method for finding the optimal solution}}
+\\
+Newton's method is designed to find the root of a function. In our case, our objective is to find the roots of the gradient of the log-likelihood function. In particular $ F( \ubar \beta )=  \nabla l( \ubar \beta ) $.
+Since Newton's method is an iterative method, we focus on the update step in each iteration i.e. when given the current solution, $ \ubar \beta^{(t)}$ we want to find a " better" solution  $ \ubar \beta^{(t+1)}$.
+
+The Newton's update step is 
+$$  \ubar \beta^{(t+1)} =  \ubar \beta^{(t)} - \left( \nabla F(  \ubar \beta^{(t)} \right)^{-1} F (  \ubar \beta^{(t)}). $$
+
+In our setting, we get
+\begin{equation} \label{Eq}
+  \ubar \beta^{(t+1)} =  \ubar \beta^{(t)} - \left( \nabla^2 l(  \ubar \beta^{(t)}) \right)^{-1} \nabla l (  \ubar \beta^{(t)}). 
+\end{equation}
+
+
+We are now ready to state the algorithm.
+\\
+
+\noindent
+{\bf Algorithm}
+\begin{enumerate}
+\item Start with an initial estimate  $ \ubar \beta^{(0)}$.
+\item In each iteration, update $  \ubar \beta^{(t)} $ according to \eqref{Eq}.
+\item Repeat until a stopping condition is met.
+There are two commonly used stopping conditions:
+\begin{enumerate}
+\item Stop while  $\|  \nabla l( \ubar \beta^{(t)})     \|_2 < \epsilon $ where $\epsilon$ is a  tolerance parameter.
+\item Stop while $\| \ubar \beta^{(t+1)}- \ubar \beta^{(t)}     \|_2  < \epsilon $.
+\end{enumerate}
+\end{enumerate}
+ 
+
+
+
+
+
+
+\end{document}

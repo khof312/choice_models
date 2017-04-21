@@ -1,0 +1,214 @@
+\documentclass[11pt]{article}
+\setlength{\oddsidemargin}{.25in}
+\setlength{\evensidemargin}{.25in} \setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.4in} \setlength{\textheight}{8.5in}
+\def\argmax{\mathop{\rm arg\,max}}
+
+\usepackage{xspace,epsfig,amsmath,amssymb,subfig,lmodern}
+\usepackage{accents}
+\usepackage{enumerate}
+\usepackage{xcolor} 
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\usepackage{commath}
+\newenvironment{sketch}{\noindent\emph{Proof Sketch:}}{$\quad \Box$}
+\newenvironment{proof}{\noindent\emph{Proof:}}{$\quad \Box$}
+\newcommand{\handout}[5]{
+   \renewcommand{\thepage}{\arabic{page}}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{
+    \hbox to 5.78in { {\bf Choice Models in Operations}  \hfill #2
+}
+       \vspace{4mm}
+       \hbox to 5.78in { {\Large \hfill #5  \hfill} }
+       \vspace{2mm}
+       \hbox to 5.78in { {\it #3 \hfill #4} }
+      }
+   }
+   \end{center}
+   \vspace*{4mm}
+}
+
+\begin{document}
+
+\handout{}{}{Instructor: Srikanth Jagabathula}
+{Scribe: Xiao Lei} {Lecture 9:  Estimation of MNL model}
+
+At the end of last lecture, we discuss how to use Newton's method to estimation MNL model with single parameter, i.e., the utility is $U_j=\beta_j+\epsilon_j$. In this lecture, we first continue the discussion of Newton's method, and then discuss the necessary and sufficient condition for the existence of unique and bounded optimal estimation under the more general setting.
+
+\section{Discussion of Newton's Method}
+Recall that when the utility is $U_j=\beta_j+\epsilon_j$, we could use Newton's method to update $\underline{\beta}$, i.e., the Newton's update step is 
+\begin{equation} \label{Eq}
+  \ubar \beta^{(t+1)} =  \ubar \beta^{(t)} - \left( \nabla^2 l(  \ubar \beta^{(t)}) \right)^{-1} \nabla l (  \ubar \beta^{(t)}),
+\end{equation}
+where
+$$\frac{\partial l(\ubar \beta)}{\partial \beta_k} = c_{k.} - \sum_{r=1}^L c_{.r} q_{kr} ( \ubar \beta)$$
+and
+\begin{equation}
+\label{hessian}
+\frac{\partial^2 l(\ubar \beta)}{\partial \beta_k \beta_{k'}} 
+= \left\{
+    \begin{array}{ll}
+        \sum_{r=1}^L c_{.r} q_{kr} ( \ubar \beta)     q_{k'r} ( \ubar \beta)                     & \mbox{if } k \neq k' , k' \in S_r \\
+       -  \sum_{r=1}^L c_{.r}q_{kr} ( \ubar \beta) ( 1-q_{kr} ( \ubar \beta)   )       & \mbox{if } k=k'
+    \end{array}
+\right.
+\end{equation}
+
+However, we note that all the row sums of the Hessian are zero, which means that the Hessian is not invertible. Because of this, Newton's method cannot be directly applied. This is happening because the likelihood function is invariant under a constant translation,i.e.,
+
+$$l(\ubar \beta +c)=\sum_{t=1}^T\frac{e^{\beta_{j_t}+c}}{\sum_{i\in S_t}e^{\beta_i+c}}=\sum_{t=1}^T\frac{e^{\beta_{j_t}}}{\sum_{i\in S_t}e^{\beta_i}}=l(\ubar \beta), \ \forall c \in \mathbb{R}.$$
+
+Note that this only happens when the mean utility is constant. If $\beta_j=\ubar \gamma^T x_j$, there is no transformation of $\ubar \gamma$ such that $l(\ubar \gamma)=l(g(\ubar \gamma))$.
+
+To deal with the issue of multiplicity of optima, we normalize the coefficient of one of the items, say item 1, i.e., $\beta_1=0$. Now the optimization problem becomes 
+\begin{align*}
+\max_{\ubar \beta} \ & l(\ubar \beta) \\
+\text{s.t.} \ & \beta_1=0.
+\end{align*}
+
+With this constraint, we just optimize over $\beta_2,\ldots,\beta_n$. The truncated Hessian is an $(n-1)\times (n-1)$ matrix with entries described in \ref{hessian}.
+
+We end this section with the discussion of convergence rate. Newton's method is a second-order method with a quadratic rate of convergence, which is faster than the first-order method, which has a linear rate of convergence. However, the inverse of large matrices is computationally expensive.
+
+\section{MNL with Feature Vectors}
+\label{general}
+We now switch to the more general setting where the products are described by features. In particular, we have observation $(j_t,S_t,(\ubar z_i)_{i\in S_t}), \ t=1,\ldots,T$, where $\ubar z_i$ is the feature vector of item $i$. The MLE problem now becomes:
+\begin{align*}
+\max_{\ubar \beta} \ l(\ubar \beta) &= \max_{\ubar \beta} \sum_{t=1}^T \log \frac{e^{\ubar \beta^T \ubar z_{j_t}}}{\sum_{i \in S_t}e^{\ubar \beta^T \ubar z_i}}\\
+&=\max_{\ubar \beta} \sum_{t=1}^T \left[  \ubar \beta^T \ubar z_{j_t}-\log (\sum_{i \in S_t}e^{\ubar \beta^T \ubar z_i}) \right].
+\end{align*}
+
+We first show that $l(\ubar \beta) $ is globally concave in $\ubar \beta \in \mathbb{R}^k$. To prove this, it is enough to show that the function $f(\ubar \beta )=\log(\sum_{i\in S}e^{\ubar \beta^T \ubar z_i})$ is globally convex for $\forall \ubar z_i \in \mathbb{R}^k$, which is equivalent to show that
+$$f(\lambda \ubar \alpha+(1-\lambda)\ubar \beta)\leq \lambda f(\ubar \alpha)+(1-\lambda)f(\ubar \beta), \ \lambda\in[0,1], \ \ubar \alpha,\ubar \beta\in \mathbb{R}^k.$$
+The left hand side is
+\begin{align*}
+LHS&=\log \left( \sum_{i\in S} e^{(\lambda \ubar \alpha+(1-\lambda)\ubar \beta)^T\ubar z_i}\right)\\
+&=\log \left(\sum_{i\in S}(e^{\ubar \alpha^T \ubar z_i})^{\lambda}(e^{\ubar \beta^T \ubar z_i})^{1-\lambda}\right).
+\end{align*}
+
+We now use Holder's inequality, which states that
+$$\sum_{i=1}^nx_iy_i\leq(\sum x_i^p)^{\frac{1}{p}}(\sum y_i^q)^{\frac{1}{q}}, \ \text{s.t. } \frac{1}{p}+\frac{1}{q}=1, \ p,q>1,$$
+and the equality occurs if and only if $x_i=cy_i, \forall i$ for some constant $c$. We now set $\lambda=1/p,\ 1-\lambda=1/q, \ x_i=(e^{\ubar \alpha^T \ubar z_i})^\lambda, \ y_i=(e^{\ubar \beta^T \ubar z_i})^{1-\lambda}$, and applies Holder's inequality to the left hand side:
+\begin{align*}
+LHS&\leq \log \left[ \left(  \sum\left( (e^{\ubar \alpha^T \ubar z_i})^{\lambda} \right)^{\frac{1}{\lambda}}  \right)^{\lambda}  \left(  \sum\left( (e^{\ubar \beta^T \ubar z_i})^{1-\lambda} \right)^{\frac{1}{1-\lambda}}  \right)^{1-\lambda}   \right]\\
+&=\log \left( \lambda \log \left( \sum e^{\ubar \alpha^T \ubar z_i} \right)  +(1- \lambda) \log \left( \sum e^{\ubar \beta^T \ubar z_i} \right)\right)\\
+&=\lambda f(\ubar \alpha)+(1-\lambda)f(\ubar \beta)=RHS,
+\end{align*} 
+which proves the desired result.
+
+Now suppose $\lambda\in(0,1)$, then it follows from Holder's inequality that $f(\lambda \ubar \alpha+(1-\lambda)\ubar \beta)\leq \lambda f(\ubar \alpha)+(1-\lambda)f(\ubar \beta)$ if and only if
+\begin{align*}
+&\frac{(e^{\ubar \alpha^T \ubar z_i})^\lambda}{(e^{\ubar \beta^T \ubar z_i})^{(1-\lambda)}}=c, \ \forall i\in S\\
+\longleftrightarrow \ & e^{(\lambda \ubar \alpha +(1-\lambda)\ubar \beta)^T \ubar z_i}=c, \ \forall i \in S\\
+\longleftrightarrow \ & e^{\ubar \gamma^T \ubar z_i}=c, \ \forall i \in S, \text{where }\ubar \gamma =\lambda \ubar \alpha +(1-\lambda) \ubar \beta.
+\end{align*}
+
+So $f(\ubar \beta)$ is strictly convex if and only if there doesn't exists $\ubar \gamma\neq 0$ such that $\ubar \gamma^T \ubar z_i=c, \ \forall i \in S$.
+
+\section{Conditions for the Existence of Unique and Bounded Optimal Estimation}
+We firstly define a graph $G$ with the $n$ products as nodes, and there exists an edge from $i$ to $j$ if and only if $i$ was chosen at least onece when $j$ was also offered. In other words, we put edges from $j_t$ to all $i \in S/\{j_t\}$.
+
+\begin{theorem}
+The log-likelihood function $l(\ubar \beta)$ has a unique and bounded optimal solution if and only if
+\begin{enumerate}[(a)]
+\item The graph $G$ is strongly connected, i.e., there is a directed path between every pairs of distinct nodes.
+\item if $\ubar \gamma(\ubar z_i - \ubar z_{j_t})=0, \  \forall i \in S_t/\{j_t\}, \ t=1,\ldots,T$, then $\ubar \gamma=0$.
+\end{enumerate}
+\end{theorem}
+
+{\bf Proof of Sufficiency}
+
+We first argue that the log-likelihood function is strictly concave. Recall that
+$$l(\ubar \beta)=\sum_{t=1}^T \log \frac{e^{\ubar \beta^T \ubar z_{j_t}}}{\sum_{i \in S_t}e^{\ubar \beta^T \ubar z_i}},$$
+where the functions in the summation is strictly concave because condition (b) ensures that only $\ubar \gamma=0$ makes $\ubar \gamma^T \ubar z_i=\ubar \gamma^T \ubar z_{j_t}, \ \forall t=1,\ldots,T$, so by the proof in section \ref{general} we know that $l(\ubar \beta)$ must be strictly concave.
+
+Now we want to show that the optimal solution is bounded. For that, we argue that the optimal solution belongs to bounded ball.
+
+We proceed as follows: define the unit sphere $s_k=\{\ubar \gamma \in \mathbb{R}^k: ||r||_2=1\}$. Let $b(\ubar \gamma)=\max_{i\in S_t/\{j_t\}} \ubar \gamma^T(\ubar z_{i}-\ubar z_{j_t})$ for $t=1,\ldots,T$. We claim that for each $\ubar \gamma\in \mathbb{R}^k$, there exists at least one pair $i\in S_t$ and $j_t$ such that $\ubar \gamma^T(\ubar z_i - \ubar z_{j_t})>0$. (We prove this claim later)
+
+Consider the following:
+\begin{align*}
+l(\ubar \beta)&=\sum_{t=1}^T \left[ -\log \left(\sum_{i \in S_t}e^{\ubar \beta^T (\ubar z_i-z_{j_t})}\right) \right]\\
+&=-\sum_{t=1}^T \left[ \log \left(\sum_{i \in S_t}e^{\ubar \gamma^T (\ubar z_i-\ubar z_{j_t})\cdot ||\ubar \beta||}\right) \right],\\
+\text{where }& \ubar \gamma=\ubar \beta/||\ubar \beta||\in s_k.
+\end{align*}
+
+It follows from our claim that there exist $i^*, \ j_t^*$ such that $\ubar \gamma^T(\ubar z_{i^*}-z_{j_t})>0$ for some $t$. We can now write
+\begin{align*}
+\log\left( \sum_{i\in S_t} e^{\ubar \gamma^T (\ubar z_i-\ubar z_{j_t})\cdot ||\beta||}  \right)&\geq \log e^{\ubar \gamma^T(\ubar z_{i^*}-\ubar z_{j^*_t})\cdot ||\ubar \beta||}=\ubar \gamma^T(\ubar z_{i^*}- \ubar z_{j^*_t})\cdot ||\ubar \beta||.
+\end{align*}
+
+It thus follows that 
+\begin{align*}
+l(\ubar \beta)&\leq -\ubar \gamma^T(\ubar z_{i^*}-\ubar z_{j^*_t})||\ubar \beta||\\
+&\leq -b^*||\ubar \beta||,
+\end{align*}
+where $b^*=\min_{\ubar \gamma \in s_k}b(\ubar \gamma)$. Note that $b^*$ is well defined since $s_k$ is compact. We will argue that $b^*>0$ later.
+
+Now choose $D=\{\ubar \beta\in \mathbb{R}^k:||\ubar \beta||\leq -l(\ubar 0)/b^*\}$. Then for any $\ubar \beta \notin D$,
+\begin{align*}
+l(\ubar \beta)&\leq -b^*||\ubar \beta||\\
+&<-b^*(-\frac{0}{\ubar \beta})\\
+&=l(0).
+\end{align*}
+Because $\ubar 0\in D$, the optimal solution must belong to $D$. We can now taking the maximum over a compact set $D$, the maximum is always achieved.
+
+\textcolor{red}{We now need to show that $b^*>0$. It is sufficient to show that $b(\ubar \gamma)>0$ for all $\ubar \gamma$. (The proof is left.)}
+
+ We now argue our claim that given any $\ubar \gamma \neq 0$, there exists a pair of $i,j_t$, such that $\ubar \gamma^T(\ubar z_i-\ubar z_{j_t})>0$. Suppose this is not true, i.e., there exists a $\ubar \gamma \neq 0$ such that $\ubar \gamma^T(\ubar z_i-\ubar z_{j_t})\leq 0$, $\forall i \in S_t/\{j_t\}$, $t=1,\ldots,T$.
+ 
+ Now consider any two items $k\neq k'$. Because $G$ is strongly connected, there exist directed paths $k \rightarrow l_1\rightarrow l_2\rightarrow \ldots \rightarrow l_m\rightarrow k'$ and $k'\rightarrow l_1' \rightarrow l_2' \rightarrow \ldots \rightarrow l_m' \rightarrow k$. This implies that
+ $$\ubar \gamma ^T(\ubar z_{l_1}-\ubar z_k)\leq 0, \ \ubar \gamma ^T(\ubar z_{l_2}-\ubar z_{l_1})\leq 0, \ldots, \ \ubar \gamma ^T(\ubar z_{k'}-\ubar z_{l_m})\leq 0$$
+ and
+ $$\ubar \gamma ^T(\ubar z_{l_1'}-\ubar z_{k'})\leq 0, \ \ubar \gamma ^T(\ubar z_{l_2'}-\ubar z_{l_1'})\leq 0, \ldots, \ \ubar \gamma ^T(\ubar z_{k}-\ubar z_{l_m'})\leq 0.$$
+ Summing along each path, we have
+ $$ \ubar \gamma ^T(\ubar z_{k}-\ubar z_{k'})\leq 0,  \ubar \gamma ^T(\ubar z_{k'}-\ubar z_{k})\leq 0,$$
+ which implies that $ \ubar \gamma ^T(\ubar z_{k}-\ubar z_{k'})=0$. So either $\gamma=0$ or $\ubar z_{k'}-\ubar z_k=0$, $\forall k\neq k'$. The latter one does not hold for general case, so $\ubar \gamma$ has to be zero. But we assume $\ubar \gamma \neq 0$, this contradicts to condition (b) that $\ubar \gamma^T(\ubar z_i -\ubar z_{j_t})=0$ only when $\ubar \gamma=0$.  \\
+ 
+{\bf Proof of Necessity}
+
+Suppose condition (a) is violated, i.e., there exists $i.j$ such that there is no directed path from $i$ to $j$. Let $A$ denote the set of nodes that can be reached from $i$. Clearly $j\notin A$. Let's also include $i$ in $A$. Let $A^c$ denote the nodes that are not in $A$.
+ 
+We now consider 2 cases.
+\begin{enumerate}
+\item Suppose there is no path from $A^c$ to $A$. For all $t$ such that $i \in S_t$, we must have that $S_t\subset A$. Similarly, if $i \notin S_t$, $S_t\subset A^c$. Let's assume that we have specific coefficients present for each product. In particular, let $\ubar z_k=[\ubar e_k | \ubar y_k]$, where $\ubar e_k$ is the unit vector $(0,\ldots,0,1,0,\ldots,0)$. Let $\alpha_k$ denote the dummy corresponding to item $k$. We can set $\alpha_k'=\alpha_k$ for all $k\in A$ and $\alpha_k'=\alpha_k+c$ for all $k\in A^c$. This would create a new coefficient vector with the same log-likelihood value. Hence the optimal solution will not be unique.
+
+\item Suppose we have a path from $A^c$ to $A$. Then set $\alpha_k'=\alpha_k$ for all $k\in A$ and $\alpha_k'=\alpha_k+c$ for all $k\in A^c$. As above, if $S\subset A$ or $S\subset A^c$ the log-likelihood value does not change. Now consider the case the $S$ intersects both $A$ and $A^c$, then it must be that $j_t\in A^c$, therefore the likelihood of the observation $(j_t,S_t)$ becomes
+$$\frac{e^{\alpha_{j_t}+c+\ubar \gamma^T \ubar y_{j_t}}}{\sum_{k\in S_t\cap A^c} e^{\alpha_k+c+\ubar \gamma^T\ubar y_k}+\sum_{k\in S_t\cap A}e^{\alpha_k+\ubar \gamma^Ty_{j_t}}},$$
+because $x\rightarrow \frac{x}{1+x}$ is increasing in $x$, the above is strictly increasing in $c$. As $c\rightarrow \infty$, the log-likelihood will keep increasing. As a result, the optimal solution will be unbounded.
+
+
+\textcolor{red}{The necessity of condition (b) is left.}
+\end{enumerate} 
+
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
